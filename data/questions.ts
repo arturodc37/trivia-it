@@ -2,672 +2,692 @@ import { Question } from "@/lib/types";
 
 export const QUESTIONS: Question[] = [
   // ==========================================
-  // 1. REDES Y NETWORKING (1-10)
+  // 1. PROXMOX (1-5)
   // ==========================================
   {
     id: 1,
-    category: "Redes",
-    question: "¿Qué protocolo y puerto estándar se utiliza para la navegación web segura y cifrada?",
+    category: "Proxmox",
+    question: "¿Qué sistema de almacenamiento distribuido se integra nativamente con Proxmox VE para ofrecer alta disponibilidad?",
     options: {
-      A: "HTTP (Puerto 80)",
-      B: "HTTPS (Puerto 443)",
-      C: "SSH (Puerto 22)",
-      D: "FTP (Puerto 21)"
+      A: "GlusterFS",
+      B: "DRBD",
+      C: "Ceph",
+      D: "ZFS sobre iSCSI"
     },
-    answer: "B",
-    explanation: "HTTPS utiliza TLS/SSL para cifrar el tráfico web y opera por defecto en el puerto TCP 443."
+    answer: "C",
+    explanation: "Proxmox VE integra Ceph nativamente en su interfaz; GlusterFS y DRBD también son válidos como storage compartido, pero no tienen esa integración nativa en la GUI/API de Proxmox."
   },
   {
     id: 2,
-    category: "Redes",
-    question: "¿Qué servicio traduce nombres de dominio legibles por humanos (ej. google.com) en direcciones IP?",
+    category: "Proxmox",
+    question: "¿Qué comando se usa en Proxmox VE para migrar en vivo una VM entre nodos?",
     options: {
-      A: "DHCP",
-      B: "NAT",
-      C: "DNS",
-      D: "ARP"
+      A: "pct migrate",
+      B: "qm migrate",
+      C: "pvecm migrate",
+      D: "qmigrate --live"
     },
-    answer: "C",
-    explanation: "DNS (Domain Name System) funciona como la libreta de contactos de Internet traduciendo nombres a IPs."
+    answer: "B",
+    explanation: "`qm migrate <vmid> <nodo>` migra en vivo una VM KVM; `pct migrate` es el equivalente pero para contenedores LXC, no VMs."
   },
   {
     id: 3,
-    category: "Redes",
-    question: "¿Cuál es la dirección IP IPv4 estándar reservada para la interfaz de loopback (localhost)?",
+    category: "Proxmox",
+    question: "¿Qué tecnología de virtualización usa Proxmox VE para sus contenedores ligeros?",
     options: {
-      A: "192.168.1.1",
-      B: "10.0.0.1",
-      C: "0.0.0.0",
-      D: "127.0.0.1"
+      A: "OpenVZ",
+      B: "systemd-nspawn",
+      C: "LXC",
+      D: "Docker"
     },
-    answer: "D",
-    explanation: "127.0.0.1 es la dirección de loopback estándar en IPv4 que apunta al propio host local."
+    answer: "C",
+    explanation: "Proxmox VE usa LXC para virtualización a nivel de SO, gestionado con `pct`; OpenVZ fue el predecesor histórico pero ya no es lo que usa Proxmox actual."
   },
   {
     id: 4,
-    category: "Redes",
-    question: "¿Cuál es la diferencia fundamental en la capa de transporte entre TCP y UDP?",
+    category: "Proxmox",
+    question: "En un clúster de Proxmox VE, ¿qué servicio gestiona el quorum entre nodos?",
     options: {
-      A: "TCP es orientado a conexión y garantiza entrega; UDP es sin conexión y prioriza velocidad",
-      B: "UDP garantiza entrega ordenada y TCP no",
-      C: "TCP solo funciona en redes locales (LAN) y UDP en Internet (WAN)",
-      D: "UDP cifra automáticamente los datos y TCP no"
+      A: "pacemaker",
+      B: "corosync",
+      C: "keepalived",
+      D: "pvestatd"
     },
-    answer: "A",
-    explanation: "TCP realiza un handshake de 3 vías y garantiza orden y entrega. UDP envía datagramas sin confirmación para baja latencia."
+    answer: "B",
+    explanation: "Corosync provee la comunicación de clúster y el mecanismo de quorum; keepalived y pacemaker son herramientas de HA de otros stacks (no las usa Proxmox por defecto)."
   },
   {
     id: 5,
-    category: "Redes",
-    question: "¿En qué capa del modelo OSI se realiza el enrutamiento de paquetes mediante direcciones IP?",
+    category: "Proxmox",
+    question: "¿Qué formato de disco se usa típicamente para VMs cuando el almacenamiento backend es Ceph RBD en Proxmox?",
     options: {
-      A: "Capa 2 - Enlace de Datos",
-      B: "Capa 3 - Red",
-      C: "Capa 4 - Transporte",
-      D: "Capa 7 - Aplicación"
+      A: "qcow2",
+      B: "vmdk",
+      C: "raw",
+      D: "vhdx"
     },
-    answer: "B",
-    explanation: "La Capa de Red (Layer 3) es responsable del direccionamiento lógico e IP y el enrutamiento entre redes."
+    answer: "C",
+    explanation: "Ceph RBD no aprovecha las ventajas de snapshots de qcow2 (se gestionan a nivel de RBD), por eso Proxmox usa `raw` sobre RBD."
   },
+
+  // ==========================================
+  // 2. DOCKER (6-10)
+  // ==========================================
   {
     id: 6,
-    category: "Redes",
-    question: "¿Qué protocolo asigna dinámicamente direcciones IP y parámetros de configuración a los clientes de una red?",
+    category: "Docker",
+    question: "¿Qué comando de Docker lista los contenedores actualmente en ejecución?",
     options: {
-      A: "DHCP",
-      B: "SNMP",
-      C: "BGP",
-      D: "ICMP"
+      A: "docker stats",
+      B: "docker ps",
+      C: "docker events",
+      D: "docker top"
     },
-    answer: "A",
-    explanation: "DHCP (Dynamic Host Configuration Protocol) automatiza la asignación de IPs, máscaras y gateways."
+    answer: "B",
+    explanation: "`docker ps` lista contenedores en ejecución; `docker stats` muestra uso de recursos y `docker top` muestra procesos dentro de un contenedor específico, no la lista general."
   },
   {
     id: 7,
-    category: "Redes",
-    question: "¿Cuál es la representación compacta de la dirección IPv6 de loopback (equivalente a 127.0.0.1)?",
+    category: "Docker",
+    question: "¿Qué archivo define los pasos para construir una imagen Docker?",
     options: {
-      A: "0:0:0:0:0:0:0:0",
-      B: "::1",
-      C: "fe80::1",
-      D: "ff02::1"
+      A: ".dockerignore",
+      B: "manifest.yaml",
+      C: "Dockerfile",
+      D: "docker-compose.yml"
     },
-    answer: "B",
-    explanation: "En IPv6, '::1' representa la dirección de loopback local (0000:...:0001)."
+    answer: "C",
+    explanation: "El Dockerfile contiene las instrucciones que `docker build` usa para generar la imagen; `.dockerignore` solo excluye archivos del contexto de build."
   },
   {
     id: 8,
-    category: "Redes",
-    question: "¿Qué comando de diagnóstico de red envía mensajes ICMP Echo Request para comprobar conectividad?",
+    category: "Docker",
+    question: "¿Qué comando levanta los servicios definidos en un docker-compose.yml en segundo plano usando la sintaxis con guion?",
     options: {
-      A: "traceroute",
-      B: "netstat",
-      C: "ping",
-      D: "nslookup"
+      A: "docker-compose run -d",
+      B: "docker-compose start -d",
+      C: "docker-compose up -d",
+      D: "docker-compose exec -d"
     },
     answer: "C",
-    explanation: "El comando 'ping' utiliza paquetes ICMP Echo Request/Reply para verificar si un host está accesible y medir latencia."
+    explanation: "`docker-compose up -d` crea y arranca los contenedores en modo detached; `start` solo arranca contenedores ya creados previamente, no los crea."
   },
   {
     id: 9,
-    category: "Redes",
-    question: "¿Qué rango comprende los 'Well-Known Ports' (puertos bien conocidos reservados por la IANA)?",
+    category: "Docker",
+    question: "¿Qué driver de red de Docker permite que contenedores en distintos hosts (nodos) se comuniquen entre sí, típico en Docker Swarm?",
     options: {
-      A: "0 a 1023",
-      B: "1024 a 49151",
-      C: "49152 a 65535",
-      D: "1 a 255"
+      A: "macvlan",
+      B: "host",
+      C: "bridge",
+      D: "overlay"
     },
-    answer: "A",
-    explanation: "Los puertos del 0 al 1023 están reservados para servicios de sistema y protocolos estándar (HTTP, SSH, SMTP, etc.)."
+    answer: "D",
+    explanation: "La red `overlay` permite comunicación entre contenedores en distintos hosts (Swarm/multi-host); `bridge` es solo intra-host."
   },
   {
     id: 10,
-    category: "Redes",
-    question: "¿Qué concepto define el tamaño máximo en bytes de un paquete que puede transmitirse en una interfaz de red sin fragmentarse?",
+    category: "Docker",
+    question: "¿Qué técnica de Dockerfile permite reducir el tamaño final de la imagen usando varias etapas de construcción?",
     options: {
-      A: "TTL (Time to Live)",
-      B: "MTU (Maximum Transmission Unit)",
-      C: "Bandwidth",
-      D: "Jitter"
+      A: "docker build --squash",
+      B: "Optimización con .dockerignore",
+      C: "Multi-stage build (FROM ... AS)",
+      D: "Layer caching"
     },
-    answer: "B",
-    explanation: "MTU (Maximum Transmission Unit) suele ser de 1500 bytes en redes Ethernet estándar."
+    answer: "C",
+    explanation: "Multi-stage build permite copiar solo los artefactos necesarios a la imagen final, descartando herramientas de compilación de etapas previas."
   },
 
   // ==========================================
-  // 2. BASES DE DATOS (11-20)
+  // 3. KUBERNETES (11-15)
   // ==========================================
   {
     id: 11,
-    category: "Bases de Datos",
-    question: "¿Qué comando SQL se utiliza para eliminar filas existentes de una tabla cumpliendo una condición?",
+    category: "Kubernetes",
+    question: "¿Cuál es la unidad más pequeña desplegable en Kubernetes?",
     options: {
-      A: "REMOVE FROM",
-      B: "DROP ROWS",
-      C: "DELETE FROM",
-      D: "TRUNCATE"
+      A: "Container",
+      B: "ReplicaSet",
+      C: "Node",
+      D: "Pod"
     },
-    answer: "C",
-    explanation: "DELETE FROM tabla WHERE condición elimina registros específicos permitiendo transacciones reversibles (rollback)."
+    answer: "D",
+    explanation: "El Pod es la unidad mínima de despliegue en Kubernetes; un Container vive dentro de un Pod, no es desplegable por sí solo como recurso de K8s."
   },
   {
     id: 12,
-    category: "Bases de Datos",
-    question: "¿Qué tipo de cláusula JOIN retorna únicamente las filas que tienen valores coincidentes en ambas tablas?",
+    category: "Kubernetes",
+    question: "¿Qué componente del control plane de Kubernetes almacena el estado del clúster?",
     options: {
-      A: "LEFT JOIN",
-      B: "FULL OUTER JOIN",
-      C: "CROSS JOIN",
-      D: "INNER JOIN"
+      A: "kube-apiserver",
+      B: "kubelet",
+      C: "etcd",
+      D: "kube-scheduler"
     },
-    answer: "D",
-    explanation: "INNER JOIN filtra y devuelve solo la intersección donde la clave foránea y primaria coinciden."
+    answer: "C",
+    explanation: "etcd almacena todo el estado del clúster; kube-apiserver es la interfaz que lee/escribe en etcd, pero no es el almacén en sí."
   },
   {
     id: 13,
-    category: "Bases de Datos",
-    question: "¿Qué significan las siglas ACID en el contexto de transacciones en bases de datos relacionales?",
+    category: "Kubernetes",
+    question: "¿Qué objeto de Kubernetes gestiona actualizaciones progresivas (rolling updates) y mantiene un número deseado de réplicas de Pods?",
     options: {
-      A: "Atomicity, Consistency, Isolation, Durability",
-      B: "Async, Concurrency, Indexing, Data",
-      C: "Availability, Consistency, Integrity, Delivery",
-      D: "Access, Control, Identification, Distribution"
+      A: "ReplicaSet",
+      B: "StatefulSet",
+      C: "Job",
+      D: "Deployment"
     },
-    answer: "A",
-    explanation: "ACID garantiza que las transacciones sean Atómicas, Consistentes, Aisladas y Durables."
+    answer: "D",
+    explanation: "Deployment gestiona ReplicaSets, habilita rolling updates y rollback; un ReplicaSet por sí solo mantiene réplicas pero no gestiona actualizaciones progresivas."
   },
   {
     id: 14,
-    category: "Bases de Datos",
-    question: "¿Qué tipo de base de datos NoSQL es Redis?",
+    category: "Kubernetes",
+    question: "¿Qué comando de kubectl muestra los logs de un contenedor dentro de un Pod?",
     options: {
-      A: "Orientada a Grafos",
-      B: "Clave-Valor en memoria (In-Memory Key-Value)",
-      C: "Columnares anchas (Wide-Column)",
-      D: "Relacional pura"
+      A: "kubectl attach",
+      B: "kubectl exec",
+      C: "kubectl logs",
+      D: "kubectl describe"
     },
-    answer: "B",
-    explanation: "Redis es una base de datos NoSQL clave-valor ultra rápida que opera en memoria RAM."
+    answer: "C",
+    explanation: "`kubectl logs <pod>` muestra la salida estándar del contenedor; `kubectl exec` ejecuta comandos dentro del contenedor, no muestra logs históricos."
   },
   {
     id: 15,
-    category: "Bases de Datos",
-    question: "¿Para qué sirve principalmente crear un ÍNDICE (Index) en una columna de una base de datos?",
+    category: "Kubernetes",
+    question: "¿Qué recurso de Kubernetes expone un conjunto de Pods como un único punto de acceso de red estable?",
     options: {
-      A: "Para encriptar los datos de esa columna",
-      B: "Para acelerar la velocidad de búsqueda y consultas (SELECT)",
-      C: "Para reducir el espacio en disco",
-      D: "Para permitir valores nulos automáticamente"
+      A: "Ingress",
+      B: "Endpoint",
+      C: "NetworkPolicy",
+      D: "Service"
     },
-    answer: "B",
-    explanation: "Los índices (como B-Trees) permiten encontrar registros en tiempo logarítmico O(log n) en lugar de escaneos completos O(n)."
+    answer: "D",
+    explanation: "Un Service da una IP/DNS estable que balancea tráfico hacia los Pods; Ingress gestiona el enrutamiento HTTP externo, pero depende de un Service detrás."
   },
+
+  // ==========================================
+  // 4. NGINX (16-20)
+  // ==========================================
   {
     id: 16,
-    category: "Bases de Datos",
-    question: "¿Qué significa el acrónimo ORM en desarrollo de software y persistencia?",
+    category: "Nginx",
+    question: "¿Qué directiva de nginx se usa para definir un grupo de servidores backend para balanceo de carga?",
     options: {
-      A: "Object-Relational Mapping",
-      B: "Online Resource Management",
-      C: "Operational Relational Model",
-      D: "Optimized Record Migration"
+      A: "location",
+      B: "listen",
+      C: "server_name",
+      D: "upstream"
     },
-    answer: "A",
-    explanation: "Un ORM (como Prisma, Hibernate, Entity Framework) mapea tablas relacionales a objetos del lenguaje de programación."
+    answer: "D",
+    explanation: "El bloque `upstream` define los servidores backend para balanceo de carga; `location` solo enruta rutas dentro de un server block."
   },
   {
     id: 17,
-    category: "Bases de Datos",
-    question: "¿Qué cláusula SQL se utiliza para combinar registros que tienen valores idénticos y aplicar funciones de agregación como COUNT() o SUM()?",
+    category: "Nginx",
+    question: "¿Qué directiva define el bloque de configuración de un sitio virtual en nginx?",
     options: {
-      A: "ORDER BY",
-      B: "PARTITION",
-      C: "GROUP BY",
-      D: "HAVING ONLY"
+      A: "http",
+      B: "vhost",
+      C: "server",
+      D: "site"
     },
     answer: "C",
-    explanation: "GROUP BY agrupa filas con valores idénticos para procesar agregaciones (SUM, AVG, COUNT)."
+    explanation: "Cada bloque `server { }` define un vhost dentro del contexto `http`; no existe una directiva literal `vhost` en nginx."
   },
   {
     id: 18,
-    category: "Bases de Datos",
-    question: "¿Qué diferencia a TRUNCATE TABLE de DELETE FROM en SQL?",
+    category: "Nginx",
+    question: "¿Cómo se recarga la configuración de nginx sin causar downtime en las conexiones activas?",
     options: {
-      A: "TRUNCATE es una operación DDL más rápida que elimina todas las filas sin registrar cada borrado individual",
-      B: "DELETE no permite cláusula WHERE y TRUNCATE sí",
-      C: "TRUNCATE borra también la estructura y definición de la tabla",
-      D: "DELETE resetea los contadores AUTO_INCREMENT y TRUNCATE no"
+      A: "systemctl restart nginx",
+      B: "nginx -s reload",
+      C: "kill -9 $(pidof nginx)",
+      D: "nginx -s stop && nginx"
     },
-    answer: "A",
-    explanation: "TRUNCATE desasigna las páginas de datos completas (DDL), siendo mucho más rápido pero no admite WHERE ni disparadores fila por fila."
+    answer: "B",
+    explanation: "`nginx -s reload` recarga sin downtime, ya que los workers antiguos terminan las conexiones en curso; `restart` sí corta el servicio momentáneamente."
   },
   {
     id: 19,
-    category: "Bases de Datos",
-    question: "¿Qué modelo de datos utiliza MongoDB para almacenar sus registros?",
+    category: "Nginx",
+    question: "¿Qué directiva de nginx se usa para reenviar peticiones hacia un servidor backend (proxy inverso)?",
     options: {
-      A: "Filas y columnas estrictas",
-      B: "Documentos flexibles tipo BSON / JSON",
-      C: "Tablas hash puras en disco",
-      D: "Nodos y aristas RDF"
+      A: "rewrite",
+      B: "fastcgi_pass",
+      C: "return",
+      D: "proxy_pass"
     },
-    answer: "B",
-    explanation: "MongoDB almacena información en documentos BSON (Binary JSON) organizados en colecciones sin esquema rígido."
+    answer: "D",
+    explanation: "`proxy_pass` reenvía la petición HTTP hacia el backend indicado; `fastcgi_pass` es específico para backends FastCGI (como PHP-FPM), no HTTP genérico."
   },
   {
     id: 20,
-    category: "Bases de Datos",
-    question: "¿Qué restricción (constraint) de base de datos asegura que todos los valores en una columna sean diferentes?",
+    category: "Nginx",
+    question: "¿Qué módulo de nginx permite terminar conexiones TLS/SSL?",
     options: {
-      A: "FOREIGN KEY",
-      B: "NOT NULL",
-      C: "UNIQUE",
-      D: "CHECK DEFAULT"
+      A: "ngx_stream_module",
+      B: "ngx_http_gzip_module",
+      C: "ngx_http_ssl_module",
+      D: "ngx_http_rewrite_module"
     },
     answer: "C",
-    explanation: "El constraint UNIQUE garantiza que no existan dos filas con el mismo valor en dicha columna."
+    explanation: "`ngx_http_ssl_module` habilita las directivas para terminar HTTPS; `ngx_stream_module` es para tráfico TCP/UDP genérico, no HTTP con TLS."
   },
 
   // ==========================================
-  // 3. PROGRAMACIÓN & ALGORITMOS (21-30)
+  // 5. IPTABLES (21-25)
   // ==========================================
   {
     id: 21,
-    category: "Programación",
-    question: "¿Qué patrón de diseño creacional restringe la instanciación de una clase a una única instancia global?",
+    category: "Iptables",
+    question: "¿Qué tabla de iptables se usa por defecto para el filtrado general de paquetes?",
     options: {
-      A: "Factory Pattern",
-      B: "Observer Pattern",
-      C: "Singleton Pattern",
-      D: "Adapter Pattern"
+      A: "mangle",
+      B: "nat",
+      C: "filter",
+      D: "raw"
     },
     answer: "C",
-    explanation: "Singleton asegura que una clase tenga una sola instancia y proporciona un punto de acceso global a ella."
+    explanation: "La tabla `filter` es la predeterminada para decidir ACCEPT/DROP; `mangle` se usa para modificar paquetes, no para filtrado básico."
   },
   {
     id: 22,
-    category: "Programación",
-    question: "¿Qué estructura de datos opera bajo el principio LIFO (Last In, First Out)?",
+    category: "Iptables",
+    question: "¿Qué cadena de iptables intercepta los paquetes destinados al propio host local?",
     options: {
-      A: "Queue (Cola)",
-      B: "Stack (Pila)",
-      C: "Array (Arreglo)",
-      D: "LinkedList (Lista Enlazada)"
+      A: "FORWARD",
+      B: "PREROUTING",
+      C: "OUTPUT",
+      D: "INPUT"
     },
-    answer: "B",
-    explanation: "Stack o Pila inserta (push) y extrae (pop) elementos por el tope siguiendo LIFO (el último en entrar es el primero en salir)."
+    answer: "D",
+    explanation: "La cadena INPUT procesa paquetes destinados al propio host; PREROUTING actúa antes de que se decida el destino (local o reenviado)."
   },
   {
     id: 23,
-    category: "Programación",
-    question: "¿Cuál es la complejidad temporal en el peor y caso promedio de la Búsqueda Binaria sobre un array ordenado?",
+    category: "Iptables",
+    question: "¿Qué comando lista las reglas actuales de iptables mostrando su número de línea?",
     options: {
-      A: "O(n)",
-      B: "O(1)",
-      C: "O(n log n)",
-      D: "O(log n)"
+      A: "iptables -S -v",
+      B: "iptables --list-rules -n",
+      C: "iptables -L --line-numbers",
+      D: "iptables -vnL --numeric"
     },
-    answer: "D",
-    explanation: "La búsqueda binaria divide a la mitad el espacio de búsqueda en cada iteración, logrando una complejidad O(log n)."
+    answer: "C",
+    explanation: "`iptables -L --line-numbers` muestra las reglas con su posición exacta en cada cadena; las otras variantes existen pero no incluyen el número de línea."
   },
   {
     id: 24,
-    category: "Programación",
-    question: "¿Qué significa el principio de desarrollo de software 'DRY'?",
+    category: "Iptables",
+    question: "¿Qué tabla de iptables se usa para realizar traducción de direcciones de red (NAT)?",
     options: {
-      A: "Don't Repeat Yourself",
-      B: "Deploy Rapidly Yearly",
-      C: "Data Redundancy Yield",
-      D: "Design Reliable Yields"
+      A: "filter",
+      B: "mangle",
+      C: "security",
+      D: "nat"
     },
-    answer: "A",
-    explanation: "DRY ('No te repitas') promueve la reutilización de lógica y evitar duplicación de código en un sistema."
+    answer: "D",
+    explanation: "La tabla `nat` contiene PREROUTING, POSTROUTING y OUTPUT para DNAT/SNAT; `mangle` se usa para marcar o alterar paquetes, no para NAT."
   },
   {
     id: 25,
-    category: "Programación",
-    question: "¿Qué lenguaje de programación de sistemas fue creado originalmente por Dennis Ritchie para implementar el sistema operativo UNIX?",
+    category: "Iptables",
+    question: "¿Qué objetivo (target) de iptables descarta silenciosamente un paquete, sin enviar respuesta al origen?",
     options: {
-      A: "Bjarne C++",
-      B: "Lenguaje C",
-      C: "Assembly x86",
-      D: "Pascal"
+      A: "REJECT",
+      B: "RETURN",
+      C: "ACCEPT",
+      D: "DROP"
     },
-    answer: "B",
-    explanation: "Dennis Ritchie desarrolló C en los laboratorios Bell entre 1969 y 1973 para reescribir el kernel de UNIX."
+    answer: "D",
+    explanation: "DROP descarta el paquete sin avisar al emisor; REJECT sí responde con un mensaje de error explícito."
   },
+
+  // ==========================================
+  // 6. AWS (26-30)
+  // ==========================================
   {
     id: 26,
-    category: "Programación",
-    question: "¿Qué ocurre conceptualmente cuando una función recursiva no tiene o nunca alcanza una condición base (base case)?",
+    category: "AWS",
+    question: "¿Qué servicio de AWS provee almacenamiento de objetos escalable?",
     options: {
-      A: "Memory Leak en disco",
-      B: "Stack Overflow (Desbordamiento de pila)",
-      C: "Deadlock en CPU",
-      D: "Null Pointer Exception"
+      A: "EBS",
+      B: "EFS",
+      C: "S3",
+      D: "Glacier"
     },
-    answer: "B",
-    explanation: "Las llamadas a funciones consumen frames en el call stack hasta agotar el límite de memoria asignado (Stack Overflow)."
+    answer: "C",
+    explanation: "Amazon S3 es el servicio de almacenamiento de objetos; EBS es almacenamiento de bloque para instancias EC2 y EFS es almacenamiento de archivos (NFS), no objetos."
   },
   {
     id: 27,
-    category: "Programación",
-    question: "¿Cuál es la complejidad temporal promedio de los algoritmos de ordenación más eficientes basados en comparación (como QuickSort o MergeSort)?",
+    category: "AWS",
+    question: "¿Qué servicio de AWS permite ejecutar código en respuesta a eventos sin aprovisionar servidores?",
     options: {
-      A: "O(n²)",
-      B: "O(n)",
-      C: "O(n log n)",
-      D: "O(2ⁿ)"
+      A: "Fargate",
+      B: "EC2",
+      C: "Lambda",
+      D: "Batch"
     },
     answer: "C",
-    explanation: "Matemáticamente, ningún algoritmo de ordenamiento por comparación puede ser más rápido que O(n log n) en el caso general."
+    explanation: "AWS Lambda ejecuta código serverless en respuesta a eventos; Fargate también evita gestionar servidores pero corre contenedores, no funciones sueltas por evento."
   },
   {
     id: 28,
-    category: "Programación",
-    question: "¿Qué tipo de tipado tiene TypeScript en comparación con JavaScript vanilla?",
+    category: "AWS",
+    question: "¿Qué servicio de AWS gestiona usuarios, roles y políticas de acceso?",
     options: {
-      A: "JavaScript es estático y TypeScript es dinámico",
-      B: "TypeScript añade un sistema de tipos estático y opcional que se compila a JavaScript",
-      C: "TypeScript es un lenguaje puramente interpretado sin chequeo previo",
-      D: "TypeScript solo funciona en entornos de servidor con Node"
+      A: "KMS",
+      B: "Cognito",
+      C: "IAM",
+      D: "Organizations"
     },
-    answer: "B",
-    explanation: "TypeScript es un superset tipado de JavaScript que detecta errores en tiempo de compilación y emite JS estándar."
+    answer: "C",
+    explanation: "AWS IAM controla usuarios, roles y políticas de acceso a nivel de cuenta; Cognito gestiona identidades de usuarios finales de aplicaciones, no accesos internos de AWS."
   },
   {
     id: 29,
-    category: "Programación",
-    question: "¿Qué método HTTP según la convención REST debe ser idempotente y se usa para actualizar completamente un recurso existente?",
+    category: "AWS",
+    question: "¿Qué servicio de AWS ofrece bases de datos relacionales gestionadas (MySQL, PostgreSQL, etc.)?",
     options: {
-      A: "POST",
-      B: "PUT",
-      C: "PATCH",
-      D: "CONNECT"
+      A: "ElastiCache",
+      B: "DynamoDB",
+      C: "Redshift",
+      D: "RDS"
     },
-    answer: "B",
-    explanation: "PUT reemplaza por completo el recurso y es idempotente (múltiples llamadas idénticas producen el mismo resultado en el servidor)."
+    answer: "D",
+    explanation: "Amazon RDS gestiona motores relacionales (MySQL, PostgreSQL, etc.); DynamoDB es NoSQL y Redshift es un data warehouse analítico, no transaccional."
   },
   {
     id: 30,
-    category: "Programación",
-    question: "¿Qué estructura de datos no lineal está compuesta por nodos conectados mediante aristas sin ciclos cerrados?",
+    category: "AWS",
+    question: "¿Qué servicio de AWS se usa para definir redes virtuales aisladas con subredes propias?",
     options: {
-      A: "Árbol (Tree)",
-      B: "Grafo cíclico",
-      C: "Hash Table",
-      D: "Matriz densa"
+      A: "CloudFront",
+      B: "Route 53",
+      C: "Direct Connect",
+      D: "VPC"
     },
-    answer: "A",
-    explanation: "Un árbol es un grafo acíclico y conectado con un nodo raíz y relaciones padre-hijo."
+    answer: "D",
+    explanation: "Amazon VPC crea una red lógicamente aislada con subredes propias; Route 53 es DNS y Direct Connect es conectividad dedicada, no definición de red virtual."
   },
 
   // ==========================================
-  // 4. CLOUD & DEVOPS (31-40)
+  // 7. GITLAB (31-35)
   // ==========================================
   {
     id: 31,
-    category: "Cloud & DevOps",
-    question: "¿Qué significan las siglas CI/CD en la cultura y automatización DevOps?",
+    category: "GitLab",
+    question: "¿Qué archivo define un pipeline de CI/CD dentro de un repositorio de GitLab?",
     options: {
-      A: "Continuous Integration / Continuous Delivery (or Deployment)",
-      B: "Cloud Infrastructure / Cloud Development",
-      C: "Code Inspection / Code Distribution",
-      D: "Centralized Interface / Centralized Database"
+      A: ".gitlab/ci.yml",
+      B: "pipeline.yaml",
+      C: ".gitlab-ci.yml",
+      D: "ci-config.json"
     },
-    answer: "A",
-    explanation: "CI/CD es la práctica de integrar código frecuentemente y desplegarlo automáticamente a entornos de staging/producción."
+    answer: "C",
+    explanation: "`.gitlab-ci.yml` en la raíz del repo define el pipeline de CI/CD; los otros nombres de archivo no son reconocidos por GitLab."
   },
   {
     id: 32,
-    category: "Cloud & DevOps",
-    question: "¿Cuál es la principal ventaja de los contenedores Docker frente a las Máquinas Virtuales tradicionales?",
+    category: "GitLab",
+    question: "¿Qué componente de GitLab ejecuta los jobs definidos en el pipeline?",
     options: {
-      A: "Los contenedores comparten el kernel del SO anfitrión, siendo mucho más ligeros y rápidos de iniciar",
-      B: "Los contenedores emulan hardware físico completo mediante hipervisores Type 1",
-      C: "Los contenedores no requieren memoria RAM",
-      D: "Los contenedores solo pueden ejecutar código en Java"
+      A: "GitLab Agent",
+      B: "Sidekiq",
+      C: "GitLab Runner",
+      D: "CI Executor Server"
     },
-    answer: "A",
-    explanation: "Docker virtualiza a nivel de sistema operativo compartiendo el kernel, lo que ahorra gigabytes de overhead por instancia."
+    answer: "C",
+    explanation: "GitLab Runner recibe y ejecuta los jobs con el executor configurado; el GitLab Agent es para conectar clústeres Kubernetes, no para ejecutar jobs de CI."
   },
   {
     id: 33,
-    category: "Cloud & DevOps",
-    question: "¿Qué plataforma de código abierto originada en Google es el estándar de facto para la orquestación y escalado de contenedores?",
+    category: "GitLab",
+    question: "¿Qué palabra clave en `.gitlab-ci.yml` define el orden de las etapas del pipeline?",
     options: {
-      A: "Terraform",
-      B: "Kubernetes (K8s)",
-      C: "Ansible",
-      D: "Puppet"
+      A: "steps",
+      B: "order",
+      C: "stages",
+      D: "phases"
     },
-    answer: "B",
-    explanation: "Kubernetes gestiona el despliegue, escalado automático, balanceo de carga y auto-recuperación de contenedores."
+    answer: "C",
+    explanation: "La clave `stages` define el orden de las etapas del pipeline; `steps` no es una palabra clave válida en GitLab CI."
   },
   {
     id: 34,
-    category: "Cloud & DevOps",
-    question: "¿Qué modelo de servicio en la nube proporciona máquinas virtuales, redes y almacenamiento bajo demanda (ej. AWS EC2, Azure VMs)?",
+    category: "GitLab",
+    question: "¿Qué funcionalidad de GitLab permite revisar y fusionar cambios de código antes de integrarlos a una rama principal?",
     options: {
-      A: "SaaS (Software as a Service)",
-      B: "PaaS (Platform as a Service)",
-      C: "IaaS (Infrastructure as a Service)",
-      D: "FaaS (Function as a Service)"
+      A: "Issue",
+      B: "Milestone",
+      C: "Snippet",
+      D: "Merge Request"
     },
-    answer: "C",
-    explanation: "IaaS entrega infraestructura computacional fundamental administrada por el proveedor."
+    answer: "D",
+    explanation: "El Merge Request permite revisar y fusionar cambios (equivalente al Pull Request de GitHub); un Issue es para reportar tareas o bugs, no cambios de código."
   },
   {
     id: 35,
-    category: "Cloud & DevOps",
-    question: "¿Qué herramienta líder de Infraestructura como Código (IaC) utiliza archivos declarativos con extensión '.tf' y lenguaje HCL?",
+    category: "GitLab",
+    question: "¿Qué característica de GitLab permite almacenar y distribuir imágenes Docker propias dentro de cada proyecto?",
     options: {
-      A: "Terraform",
-      B: "Chef",
-      C: "CloudFormation puro",
-      D: "Vagrant"
+      A: "Package Registry",
+      B: "Wiki",
+      C: "Artifact Storage",
+      D: "Container Registry"
     },
-    answer: "A",
-    explanation: "Terraform (de HashiCorp) permite definir y aprovisionar infraestructura multi-cloud mediante archivos declarativos .tf."
-  },
-  {
-    id: 36,
-    category: "Cloud & DevOps",
-    question: "¿Qué comando de Git crea y se cambia inmediatamente a una nueva rama local?",
-    options: {
-      A: "git branch --make <nombre>",
-      B: "git checkout -b <nombre>  (o git switch -c <nombre>)",
-      C: "git merge --new <nombre>",
-      D: "git commit -b <nombre>"
-    },
-    answer: "B",
-    explanation: "'git checkout -b' o 'git switch -c' crea la rama y posiciona HEAD sobre ella en un solo paso."
-  },
-  {
-    id: 37,
-    category: "Cloud & DevOps",
-    question: "¿Qué servicio de almacenamiento de objetos ultra escalable ofrece Amazon Web Services para guardar archivos estáticos y backups?",
-    options: {
-      A: "AWS EBS",
-      B: "AWS S3 (Simple Storage Service)",
-      C: "AWS RDS",
-      D: "AWS DynamoDB"
-    },
-    answer: "B",
-    explanation: "Amazon S3 es el servicio de almacenamiento de objetos con 99.999999999% (11 nueves) de durabilidad."
-  },
-  {
-    id: 38,
-    category: "Cloud & DevOps",
-    question: "¿Qué significa SLA en contratos de servicios de computación en la nube?",
-    options: {
-      A: "Service Level Agreement (Acuerdo de Nivel de Servicio)",
-      B: "System Latency Architecture",
-      C: "Server Load Allocation",
-      D: "Secure Layer Authentication"
-    },
-    answer: "A",
-    explanation: "Un SLA estipula el porcentaje de disponibilidad garantizada (ej. 99.99% uptime) y penalizaciones si no se cumple."
-  },
-  {
-    id: 39,
-    category: "Cloud & DevOps",
-    question: "¿Qué arquitectura en la nube ejecuta funciones individuales en respuesta a eventos sin que el desarrollador gestione servidores?",
-    options: {
-      A: "Monolítica On-Premise",
-      B: "Serverless / FaaS (ej. AWS Lambda, Cloudflare Workers)",
-      C: "Cluster Bare-Metal",
-      D: "Mainframe Storage"
-    },
-    answer: "B",
-    explanation: "Serverless escala automáticamente a cero cuando no hay peticiones y cobra estrictamente por milisegundos de ejecución."
-  },
-  {
-    id: 40,
-    category: "Cloud & DevOps",
-    question: "¿Qué componente de red distribuye el tráfico entrante de manera equitativa entre múltiples servidores para evitar saturaciones?",
-    options: {
-      A: "Balanceador de Carga (Load Balancer)",
-      B: "Switch de Acceso",
-      C: "Proxy SOCKS",
-      D: "DNS Resolver"
-    },
-    answer: "A",
-    explanation: "Un Load Balancer distribuye las peticiones entre instancias backend saludables según algoritmos como Round Robin o Least Connections."
+    answer: "D",
+    explanation: "El Container Registry integrado permite push/pull de imágenes Docker por proyecto; el Package Registry existe pero es para paquetes (npm, Maven, etc.), no imágenes de contenedor."
   },
 
   // ==========================================
-  // 5. CIBERSEGURIDAD (41-50)
+  // 8. DEVOPS GENERAL (36-40)
+  // ==========================================
+  {
+    id: 36,
+    category: "DevOps",
+    question: "¿Qué práctica de DevOps consiste en integrar cambios de código frecuentemente en un repositorio compartido, validándolos con builds y pruebas automáticas?",
+    options: {
+      A: "Canary Release",
+      B: "Feature Flagging",
+      C: "Blue-Green Deployment",
+      D: "Integración Continua (CI)"
+    },
+    answer: "D",
+    explanation: "La Integración Continua valida cada cambio con builds y tests automáticos al integrarlo frecuentemente; Blue-Green y Canary son estrategias de despliegue, no de integración de código."
+  },
+  {
+    id: 37,
+    category: "DevOps",
+    question: "¿Cuál de estas herramientas es un ejemplo típico de Infraestructura como Código (IaC)?",
+    options: {
+      A: "Jenkins",
+      B: "Prometheus",
+      C: "Grafana",
+      D: "Terraform"
+    },
+    answer: "D",
+    explanation: "Terraform define infraestructura en archivos declarativos versionables (IaC); Jenkins es una herramienta de CI/CD, no de definición de infraestructura."
+  },
+  {
+    id: 38,
+    category: "DevOps",
+    question: "¿Qué práctica DevOps busca reducir al mínimo el tiempo entre que se hace un commit y su despliegue seguro en producción?",
+    options: {
+      A: "Code Review",
+      B: "Sprint Planning",
+      C: "Pair Programming",
+      D: "Continuous Delivery/Deployment"
+    },
+    answer: "D",
+    explanation: "Continuous Delivery/Deployment reduce el lead time entre commit y producción; Code Review y Pair Programming son prácticas de calidad de código, no de velocidad de despliegue."
+  },
+  {
+    id: 39,
+    category: "DevOps",
+    question: "¿Qué herramienta de gestión de configuración usa 'playbooks' en YAML y no requiere agente instalado en los nodos administrados (usa SSH)?",
+    options: {
+      A: "Puppet",
+      B: "Chef",
+      C: "SaltStack (modo agente)",
+      D: "Ansible"
+    },
+    answer: "D",
+    explanation: "Ansible es agentless: usa SSH y playbooks YAML sin agente permanente; Puppet y Chef sí requieren un agente instalado en los nodos gestionados."
+  },
+  {
+    id: 40,
+    category: "DevOps",
+    question: "¿Qué término describe la práctica de tratar los servidores como recursos desechables y reemplazables en vez de mantenerlos individualmente ('mascotas')?",
+    options: {
+      A: "Snowflake servers",
+      B: "Configuration drift",
+      C: "Vertical scaling",
+      D: "Cattle, not pets (infraestructura inmutable)"
+    },
+    answer: "D",
+    explanation: "\"Cattle, not pets\" promueve servidores reemplazables e inmutables; \"configuration drift\" es el problema que esta práctica busca evitar, no el nombre de la práctica en sí."
+  },
+
+  // ==========================================
+  // 9. SEGURIDAD (41-45)
   // ==========================================
   {
     id: 41,
-    category: "Ciberseguridad",
-    question: "¿Qué tipo de vulnerabilidad ocurre cuando una aplicación interpreta entrada de usuario no sanitizada como comandos directos de base de datos?",
+    category: "Seguridad",
+    question: "¿Qué protocolo cifra el tráfico web y sustituye al HTTP inseguro?",
     options: {
-      A: "Cross-Site Scripting (XSS)",
-      B: "SQL Injection (SQLi)",
-      C: "Buffer Overflow",
-      D: "Man-in-the-Middle (MitM)"
+      A: "FTP",
+      B: "SNMP",
+      C: "Telnet",
+      D: "HTTPS (TLS/SSL)"
     },
-    answer: "B",
-    explanation: "SQL Injection permite a atacantes manipular consultas concatenadas para eludir autenticaciones o extraer datos."
+    answer: "D",
+    explanation: "HTTPS usa TLS/SSL para cifrar la comunicación cliente-servidor; FTP y Telnet son protocolos inseguros por defecto (sin cifrado)."
   },
   {
     id: 42,
-    category: "Ciberseguridad",
-    question: "¿Qué significa el ataque XSS (Cross-Site Scripting)?",
+    category: "Seguridad",
+    question: "¿Qué tipo de ataque busca saturar un servicio con tráfico masivo, generalmente distribuido, para dejarlo indisponible?",
     options: {
-      A: "Inyección de scripts maliciosos (generalmente JavaScript) en páginas web vistas por otros usuarios",
-      B: "Cifrado no autorizado de discos duros para pedir rescate",
-      C: "Sobrecarga de servidores DNS con consultas masivas",
-      D: "Intercepción de cables submarinos de fibra óptica"
+      A: "SQL Injection",
+      B: "Man-in-the-middle",
+      C: "Phishing",
+      D: "DDoS"
     },
-    answer: "A",
-    explanation: "XSS permite ejecutar código JS en el navegador de la víctima para robar cookies de sesión o suplantar su identidad."
+    answer: "D",
+    explanation: "DDoS satura recursos desde múltiples orígenes distribuidos; un ataque DoS simple (no distribuido) usa un solo origen."
   },
   {
     id: 43,
-    category: "Ciberseguridad",
-    question: "¿Cuál es la diferencia principal entre el cifrado Simétrico y el Asimétrico?",
+    category: "Seguridad",
+    question: "¿Qué principio de seguridad establece otorgar a cada usuario o servicio solo los permisos estrictamente necesarios para su función?",
     options: {
-      A: "Simétrico usa la misma clave para cifrar y descifrar; Asimétrico usa un par de claves (pública y privada)",
-      B: "Simétrico solo se usa en hardware y Asimétrico en software",
-      C: "Asimétrico es vulnerable a ataques de fuerza bruta y Simétrico no",
-      D: "Simétrico siempre requiere conexión a Internet"
+      A: "Defensa en profundidad",
+      B: "Seguridad por oscuridad",
+      C: "Fail-open",
+      D: "Principio de mínimo privilegio"
     },
-    answer: "A",
-    explanation: "En cifrado simétrico (AES) la clave es compartida. En asimétrico (RSA, ECC), la pública cifra y la privada descifra."
+    answer: "D",
+    explanation: "El mínimo privilegio limita accesos al mínimo indispensable; la defensa en profundidad es un concepto relacionado pero distinto (capas múltiples de seguridad, no solo permisos)."
   },
   {
     id: 44,
-    category: "Ciberseguridad",
-    question: "¿Qué es un ataque DDoS (Distributed Denial of Service)?",
+    category: "Seguridad",
+    question: "¿Qué mecanismo añade una segunda capa de verificación además de usuario y contraseña?",
     options: {
-      A: "Un ataque que inunda un servicio con tráfico proveniente de múltiples fuentes comprometidas (botnets) para saturarlo",
-      B: "El robo físico de servidores en un centro de datos",
-      C: "La alteración de firmas criptográficas en correos",
-      D: "La decodificación de contraseñas mediante tablas arcoíris"
+      A: "Single Sign-On (SSO) simple",
+      B: "Hashing de contraseñas",
+      C: "Captcha",
+      D: "Autenticación de dos factores (2FA/MFA)"
     },
-    answer: "A",
-    explanation: "DDoS busca agotar el ancho de banda, CPU o conexiones del servidor usando miles de dispositivos zombies para dejarlo inaccesible."
+    answer: "D",
+    explanation: "2FA/MFA exige un segundo factor además de la contraseña; el SSO simple solo centraliza la autenticación, no añade una capa adicional de verificación."
   },
   {
     id: 45,
-    category: "Ciberseguridad",
-    question: "¿Qué técnica de ingeniería social consiste en enviar correos o mensajes fraudulentos haciéndose pasar por una entidad de confianza?",
+    category: "Seguridad",
+    question: "¿Qué herramienta se usa comúnmente para escaneo de vulnerabilidades en auditorías de seguridad de infraestructura?",
     options: {
-      A: "Phishing",
-      B: "Ransomware",
-      C: "Spyware",
-      D: "Rootkit"
+      A: "Wireshark",
+      B: "Ansible",
+      C: "Grafana",
+      D: "OpenVAS"
     },
-    answer: "A",
-    explanation: "El Phishing busca engañar a las víctimas para que revelen credenciales, números de tarjeta o descarguen malware."
+    answer: "D",
+    explanation: "OpenVAS es un escáner de vulnerabilidades de código abierto; Wireshark es un analizador de tráfico de red, no un escáner de vulnerabilidades."
   },
+
+  // ==========================================
+  // 10. LINUX / SYSADMIN (46-50)
+  // ==========================================
   {
     id: 46,
-    category: "Ciberseguridad",
-    question: "¿Qué significa MFA / 2FA en el control de acceso y autenticación?",
+    category: "Linux",
+    question: "¿Qué comando de Linux muestra el uso de espacio en disco por sistema de archivos en formato legible?",
     options: {
-      A: "Multi-Factor Authentication (Autenticación de Múltiples Factores)",
-      B: "Main Firewall Architecture",
-      C: "Master File Allocation",
-      D: "Managed Fast Access"
+      A: "du -h",
+      B: "free -h",
+      C: "lsblk -h",
+      D: "df -h"
     },
-    answer: "A",
-    explanation: "MFA exige verificar al menos 2 factores independientes: algo que sabes (password), algo que tienes (móvil/token), o algo que eres (biometría)."
+    answer: "D",
+    explanation: "`df -h` muestra espacio usado/disponible por sistema de archivos montado; `du -h` mide el uso de espacio de archivos/directorios específicos, no del filesystem completo."
   },
   {
     id: 47,
-    category: "Ciberseguridad",
-    question: "¿Qué es una vulnerabilidad 'Zero-Day' (Día Cero)?",
+    category: "Linux",
+    question: "¿Qué comando permite editar el crontab del usuario actual en Linux?",
     options: {
-      A: "Una vulnerabilidad recién descubierta para la cual aún no existe un parche oficial del fabricante",
-      B: "Un virus que solo actúa el primer día del mes",
-      C: "Un certificado SSL que caducó hace 0 días",
-      D: "Un fallo de hardware que se repara automáticamente"
+      A: "cron edit",
+      B: "systemctl edit cron",
+      C: "at -e",
+      D: "crontab -e"
     },
-    answer: "A",
-    explanation: "Zero-day indica que los desarrolladores han tenido 'cero días' para corregir la falla desde que se conoció públicamente o fue explotada."
+    answer: "D",
+    explanation: "`crontab -e` abre el editor para modificar las tareas programadas del usuario actual; `at -e` no es un comando válido de Linux."
   },
   {
     id: 48,
-    category: "Ciberseguridad",
-    question: "¿Qué algoritmo criptográfico unidireccional y función hash es el estándar moderno seguro recomendado (a diferencia del obsoleto MD5)?",
+    category: "Linux",
+    question: "¿Qué archivo contiene la configuración de los repositorios APT en sistemas Debian/Ubuntu?",
     options: {
-      A: "SHA-256 (familia SHA-2)",
-      B: "MD5",
-      C: "ROT13",
-      D: "DES"
+      A: "/etc/yum.repos.d/base.repo",
+      B: "/etc/apt/apt.conf",
+      C: "/etc/dpkg/dpkg.cfg",
+      D: "/etc/apt/sources.list"
     },
-    answer: "A",
-    explanation: "SHA-256 genera un hash de 256 bits resistente a colisiones y es la base de TLS, Bitcoin y firmas digitales modernas."
+    answer: "D",
+    explanation: "`/etc/apt/sources.list` define los repositorios APT en Debian/Ubuntu; `/etc/yum.repos.d/base.repo` es el equivalente en sistemas basados en RPM (RHEL/CentOS), no en Debian."
   },
   {
     id: 49,
-    category: "Ciberseguridad",
-    question: "¿Qué significa el principio de 'Mínimo Privilegio' (Principle of Least Privilege)?",
+    category: "Linux",
+    question: "¿Qué demonio puede actuar simultáneamente como resolutor DNS local y servidor DHCP ligero en Linux?",
     options: {
-      A: "Otorgar a usuarios y procesos solo los accesos y permisos estrictamente indispensables para su labor",
-      B: "Crear una única cuenta de superusuario para todo el equipo",
-      C: "Prohibir el uso de contraseñas de más de 8 caracteres",
-      D: "Permitir acceso anónimo a todas las APIs internas"
+      A: "bind9",
+      B: "systemd-resolved",
+      C: "unbound",
+      D: "dnsmasq"
     },
-    answer: "A",
-    explanation: "Limitar los privilegios minimiza el daño potencial en caso de que una cuenta o servicio sea comprometido."
+    answer: "D",
+    explanation: "dnsmasq combina resolución DNS y servidor DHCP ligero en un solo demonio; bind9 y unbound son solo resolutores DNS, sin funcionalidad DHCP integrada."
   },
   {
     id: 50,
-    category: "Ciberseguridad",
-    question: "¿Qué es el 'Ransomware'?",
+    category: "Linux",
+    question: "¿Qué comando muestra en tiempo real los procesos en ejecución junto con su uso de CPU y memoria?",
     options: {
-      A: "Malware que secuestra y cifra los archivos de la víctima exigiendo un rescate económico para su recuperación",
-      B: "Un software gratuito para acelerar la conexión a Internet",
-      C: "Un escáner de puertos de código abierto",
-      D: "Un protocolo para compartir archivos peer-to-peer"
+      A: "ps aux (estático)",
+      B: "lsof",
+      C: "vmstat 1",
+      D: "top / htop"
     },
-    answer: "A",
-    explanation: "El Ransomware cifra los sistemas de organizaciones o usuarios y extorsiona exigiendo pagos comúnmente en criptomonedas."
+    answer: "D",
+    explanation: "`top`/`htop` muestran procesos en tiempo real con uso de CPU y memoria; `ps aux` es una fotografía estática del momento en que se ejecuta, no se actualiza sola."
   }
 ];

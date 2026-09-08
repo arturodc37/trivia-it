@@ -3,7 +3,7 @@ export type GamePhase = "waiting" | "question" | "reveal" | "finished";
 
 export interface Question {
   id: number;
-  category: "Redes" | "Bases de Datos" | "Programación" | "Cloud & DevOps" | "Ciberseguridad";
+  category: string;
   question: string;
   codeSnippet?: string;
   options: Record<Option, string>;

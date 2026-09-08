@@ -19,12 +19,17 @@ Juego interactivo multijugador en tiempo real para eventos, charlas, clases o re
 
 ## 🛠️ Banco de Preguntas (50 Preguntas)
 
-El banco incluye 50 preguntas seleccionadas en 5 categorías esenciales de IT (10 por categoría):
-- 🌐 **Redes y Networking**
-- 🗄️ **Bases de Datos**
-- 💻 **Programación & Algoritmos**
-- ☁️ **Cloud & DevOps**
-- 🔒 **Ciberseguridad**
+El banco incluye 50 preguntas técnicas de opción múltiple distribuidas en:
+- 🖥️ **Proxmox VE** (Ceph, qm migrate, LXC, corosync, raw)
+- 🐳 **Docker** (ps, Dockerfile, compose, overlay, multi-stage)
+- ☸️ **Kubernetes** (Pod, etcd, Deployment, logs, Service)
+- 🌐 **Nginx** (upstream, server, reload, proxy_pass, ssl)
+- 🔥 **Iptables** (filter, INPUT, line numbers, nat, DROP)
+- ☁️ **AWS** (S3, Lambda, IAM, RDS, VPC)
+- 🦊 **GitLab** (ci.yml, Runner, stages, Merge Request, Container Registry)
+- 🚀 **DevOps** (CI, Terraform, CD, Ansible, Cattle not pets)
+- 🔒 **Seguridad** (HTTPS, DDoS, Mínimo privilegio, 2FA/MFA, OpenVAS)
+- 🐧 **Linux / SysAdmin** (df -h, crontab, sources.list, dnsmasq, top/htop)
 
 ---
 
