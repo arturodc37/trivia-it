@@ -1,6 +1,6 @@
 {
-  "name": "alucinations",
-  "version": "0.1.0",
+  "name": "rapidagil-it",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,14 +9,16 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
+    "canvas-confetti": "^1.9.4",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
-    "nuqs": "^2.8.8",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

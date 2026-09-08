@@ -1,563 +1,673 @@
-﻿import type { Question } from "@/lib/types";
+import { Question } from "@/lib/types";
 
-export const questions: Question[] = [
+export const QUESTIONS: Question[] = [
+  // ==========================================
+  // 1. REDES Y NETWORKING (1-10)
+  // ==========================================
   {
     id: 1,
-    language: "PHP",
-    task: "Crear un array vacío.",
+    category: "Redes",
+    question: "¿Qué protocolo y puerto estándar se utiliza para la navegación web segura y cifrada?",
     options: {
-      A: "$lista = list();",
-      B: "$lista = array();",
-      C: "$lista = [];",
-      D: "$lista = (array) null;",
+      A: "HTTP (Puerto 80)",
+      B: "HTTPS (Puerto 443)",
+      C: "SSH (Puerto 22)",
+      D: "FTP (Puerto 21)"
     },
-    answer: "A",
-    explanation:
-      "`list()` en PHP es una construcción de lenguaje para asignar variables desde un array, no para crear un array vacío.",
+    answer: "B",
+    explanation: "HTTPS utiliza TLS/SSL para cifrar el tráfico web y opera por defecto en el puerto TCP 443."
   },
   {
     id: 2,
-    language: "TypeScript",
-    task: "Definir una interfaz Usuario donde `edad` es opcional.",
+    category: "Redes",
+    question: "¿Qué servicio traduce nombres de dominio legibles por humanos (ej. google.com) en direcciones IP?",
     options: {
-      A: "interface Usuario { nombre: string; edad?: number; }",
-      B: "interface Usuario { nombre: string; edad: Optional<number>; }",
-      C: "interface Usuario { nombre: string; edad: number | undefined; }",
-      D: "type Usuario = { nombre: string; edad?: number };",
+      A: "DHCP",
+      B: "NAT",
+      C: "DNS",
+      D: "ARP"
     },
-    answer: "B",
-    explanation:
-      "No existe un tipo nativo `Optional` en TypeScript (a diferencia de Java). La sintaxis correcta para opcional es el signo de interrogación `?`.",
+    answer: "C",
+    explanation: "DNS (Domain Name System) funciona como la libreta de contactos de Internet traduciendo nombres a IPs."
   },
   {
     id: 3,
-    language: "Java",
-    task: "Crear un objeto File para `data.txt`.",
+    category: "Redes",
+    question: "¿Cuál es la dirección IP IPv4 estándar reservada para la interfaz de loopback (localhost)?",
     options: {
-      A: 'File f = File.create("data.txt");',
-      B: 'Path p = Paths.get("data.txt");',
-      C: 'var f = new File("data.txt");',
-      D: 'File f = new File("data.txt");',
+      A: "192.168.1.1",
+      B: "10.0.0.1",
+      C: "0.0.0.0",
+      D: "127.0.0.1"
     },
-    answer: "A",
-    explanation:
-      "La clase `File` no tiene un método estático `create` que devuelva un objeto File. Se usa el constructor `new File(...)`.",
+    answer: "D",
+    explanation: "127.0.0.1 es la dirección de loopback estándar en IPv4 que apunta al propio host local."
   },
   {
     id: 4,
-    language: "C#",
-    task: "Crear un saludo con la variable `nombre`.",
+    category: "Redes",
+    question: "¿Cuál es la diferencia fundamental en la capa de transporte entre TCP y UDP?",
     options: {
-      A: 'var mensaje = "Hola " + nombre;',
-      B: 'var mensaje = string.Format("Hola {0}", nombre);',
-      C: 'var mensaje = $"Hola {nombre}";',
-      D: 'var mensaje = "Hola ${nombre}";',
+      A: "TCP es orientado a conexión y garantiza entrega; UDP es sin conexión y prioriza velocidad",
+      B: "UDP garantiza entrega ordenada y TCP no",
+      C: "TCP solo funciona en redes locales (LAN) y UDP en Internet (WAN)",
+      D: "UDP cifra automáticamente los datos y TCP no"
     },
-    answer: "D",
-    explanation:
-      'La interpolación de cadenas en C# requiere el símbolo `$` antes de las comillas de apertura (`$"..."`). Poner el símbolo dentro de la cadena (`"${...}"`) es sintaxis de JavaScript (Template Literals), no de C#.',
+    answer: "A",
+    explanation: "TCP realiza un handshake de 3 vías y garantiza orden y entrega. UDP envía datagramas sin confirmación para baja latencia."
   },
   {
     id: 5,
-    language: "Python",
-    task: 'Convertir la lista `strings = ["1", "2", "3"]` a una lista de enteros.',
+    category: "Redes",
+    question: "¿En qué capa del modelo OSI se realiza el enrutamiento de paquetes mediante direcciones IP?",
     options: {
-      A: "enteros = [int(x) for x in strings]",
-      B: "enteros = list(map(int, strings))",
-      C: "enteros = strings.map(int)",
-      D: "enteros = []\nfor s in strings:\n    enteros.append(int(s))",
+      A: "Capa 2 - Enlace de Datos",
+      B: "Capa 3 - Red",
+      C: "Capa 4 - Transporte",
+      D: "Capa 7 - Aplicación"
     },
-    answer: "C",
-    explanation:
-      "Las listas en Python no tienen un método `.map()`. Este método pertenece a la función global `map()` que devuelve un iterador, o es común en otros lenguajes, pero no es un método de la clase `list`.",
+    answer: "B",
+    explanation: "La Capa de Red (Layer 3) es responsable del direccionamiento lógico e IP y el enrutamiento entre redes."
   },
   {
     id: 6,
-    language: "Python",
-    task: 'Imprimir "Hola" sin saltar a la siguiente línea (Python 3).',
+    category: "Redes",
+    question: "¿Qué protocolo asigna dinámicamente direcciones IP y parámetros de configuración a los clientes de una red?",
     options: {
-      A: 'print("Hola", end="")',
-      B: 'print("Hola", newline=False)',
-      C: 'import sys\nsys.stdout.write("Hola")',
-      D: "print('Hola', end=' ')",
+      A: "DHCP",
+      B: "SNMP",
+      C: "BGP",
+      D: "ICMP"
     },
-    answer: "B",
-    explanation:
-      "La función `print()` en Python no acepta un argumento `newline`. El argumento correcto para definir el final de la línea es `end`.",
+    answer: "A",
+    explanation: "DHCP (Dynamic Host Configuration Protocol) automatiza la asignación de IPs, máscaras y gateways."
   },
   {
     id: 7,
-    language: "Python",
-    task: "Separar `texto` por comas.",
+    category: "Redes",
+    question: "¿Cuál es la representación compacta de la dirección IPv6 de loopback (equivalente a 127.0.0.1)?",
     options: {
-      A: 'texto.explode(",")',
-      B: "texto.split(',')",
-      C: "import re\nre.split(',', texto)",
-      D: 'texto.split(",")',
+      A: "0:0:0:0:0:0:0:0",
+      B: "::1",
+      C: "fe80::1",
+      D: "ff02::1"
     },
-    answer: "A",
-    explanation:
-      "El método `.explode()` es de PHP. En Python se usa `.split()`. Esta es una alucinación común donde la IA confunde métodos de diferentes lenguajes.",
+    answer: "B",
+    explanation: "En IPv6, '::1' representa la dirección de loopback local (0000:...:0001)."
   },
   {
     id: 8,
-    language: "TypeScript",
-    task: "Comprobar si el objeto `usuario` tiene la propiedad `email`.",
+    category: "Redes",
+    question: "¿Qué comando de diagnóstico de red envía mensajes ICMP Echo Request para comprobar conectividad?",
     options: {
-      A: "if ('email' in usuario) { ... }",
-      B: "if (usuario.hasOwnProperty('email')) { ... }",
-      C: "if (usuario.email !== undefined) { ... }",
-      D: "if (usuario.exists('email')) { ... }",
+      A: "traceroute",
+      B: "netstat",
+      C: "ping",
+      D: "nslookup"
     },
-    answer: "D",
-    explanation:
-      "Los objetos estándar en JavaScript/TypeScript no tienen un método `.exists()`. La forma correcta es usar `in`, `hasOwnProperty` o comprobar si es `undefined`.",
+    answer: "C",
+    explanation: "El comando 'ping' utiliza paquetes ICMP Echo Request/Reply para verificar si un host está accesible y medir latencia."
   },
   {
     id: 9,
-    language: "Go",
-    task: "Quitar el elemento en el índice `i` del slice `lista`.",
+    category: "Redes",
+    question: "¿Qué rango comprende los 'Well-Known Ports' (puertos bien conocidos reservados por la IANA)?",
     options: {
-      A: "lista = append(lista[:i], lista[i+1:]...)",
-      B: "copy(lista[i:], lista[i+1:])\nlista = lista[:len(lista)-1]",
-      C: "lista.remove(i)",
-      D: "lista = slices.Delete(lista, i, i+1) // Go 1.21+",
+      A: "0 a 1023",
+      B: "1024 a 49151",
+      C: "49152 a 65535",
+      D: "1 a 255"
     },
-    answer: "C",
-    explanation:
-      "Go no es un lenguaje orientado a objetos puro y los slices no tienen métodos adjuntos como `.remove()`. Se deben usar operaciones de `append` o `copy` explícitas.",
+    answer: "A",
+    explanation: "Los puertos del 0 al 1023 están reservados para servicios de sistema y protocolos estándar (HTTP, SSH, SMTP, etc.)."
   },
   {
     id: 10,
-    language: "TypeScript",
-    task: "Agregar el valor `5` al array `numeros`.",
+    category: "Redes",
+    question: "¿Qué concepto define el tamaño máximo en bytes de un paquete que puede transmitirse en una interfaz de red sin fragmentarse?",
     options: {
-      A: "numeros.push(5);",
-      B: "numeros.append(5);",
-      C: "numeros[numeros.length] = 5;",
-      D: "numeros = [...numeros, 5];",
+      A: "TTL (Time to Live)",
+      B: "MTU (Maximum Transmission Unit)",
+      C: "Bandwidth",
+      D: "Jitter"
     },
     answer: "B",
-    explanation:
-      "Los arrays en JS/TS no tienen un método `.append()`. Ese método es típico de Python o jQuery. El método correcto en JS es `.push()`.",
+    explanation: "MTU (Maximum Transmission Unit) suele ser de 1500 bytes en redes Ethernet estándar."
   },
+
+  // ==========================================
+  // 2. BASES DE DATOS (11-20)
+  // ==========================================
   {
     id: 11,
-    language: "Java",
-    task: "Verificar si `a` y `b` son iguales textualmente.",
+    category: "Bases de Datos",
+    question: "¿Qué comando SQL se utiliza para eliminar filas existentes de una tabla cumpliendo una condición?",
     options: {
-      A: "if (a.equal(b)) { ... }",
-      B: "if (a.compareTo(b) == 0) { ... }",
-      C: "if (a.equals(b)) { ... }",
-      D: "if (a == b) { ... }",
+      A: "REMOVE FROM",
+      B: "DROP ROWS",
+      C: "DELETE FROM",
+      D: "TRUNCATE"
     },
-    answer: "A",
-    explanation:
-      "El método en Java es `equals` (plural). `equal` (singular) no existe. Es un error sutil pero frecuente en alucinaciones de IA.",
+    answer: "C",
+    explanation: "DELETE FROM tabla WHERE condición elimina registros específicos permitiendo transacciones reversibles (rollback)."
   },
   {
     id: 12,
-    language: "Python",
-    task: "Obtener la cadena invertida de una variable `texto`.",
+    category: "Bases de Datos",
+    question: "¿Qué tipo de cláusula JOIN retorna únicamente las filas que tienen valores coincidentes en ambas tablas?",
     options: {
-      A: 'invertido = ""\nfor char in texto:\n    invertido = char + invertido',
-      B: 'invertido = "".join(reversed(texto))',
-      C: "invertido = texto[::-1]",
-      D: "invertido = texto.reverse()",
+      A: "LEFT JOIN",
+      B: "FULL OUTER JOIN",
+      C: "CROSS JOIN",
+      D: "INNER JOIN"
     },
     answer: "D",
-    explanation:
-      "Las cadenas (str) en Python no tienen un método `.reverse()`. Este método existe para listas, pero modifica la lista in-place y no devuelve nada. La IA suele alucinar este método transfiriendo conocimientos de otros lenguajes.",
+    explanation: "INNER JOIN filtra y devuelve solo la intersección donde la clave foránea y primaria coinciden."
   },
   {
     id: 13,
-    language: "Go",
-    task: "Obtener el año actual de la variable `t` (time.Time).",
+    category: "Bases de Datos",
+    question: "¿Qué significan las siglas ACID en el contexto de transacciones en bases de datos relacionales?",
     options: {
-      A: "year := t.Year()",
-      B: "year := t.Year",
-      C: "year := t.getYear()",
-      D: "year := time.Year(t)",
+      A: "Atomicity, Consistency, Isolation, Durability",
+      B: "Async, Concurrency, Indexing, Data",
+      C: "Availability, Consistency, Integrity, Delivery",
+      D: "Access, Control, Identification, Distribution"
     },
-    answer: "C",
-    explanation:
-      "El método `.getYear()` no existe en Go. Esta es una alucinación donde la IA confunde la sintaxis de Go con lenguajes como Java que usan getters. En Go se accede directamente al método: `t.Year()`.",
+    answer: "A",
+    explanation: "ACID garantiza que las transacciones sean Atómicas, Consistentes, Aisladas y Durables."
   },
   {
     id: 14,
-    language: "Java",
-    task: "Ordenar un arreglo de números `int[] numeros` de forma ascendente.",
+    category: "Bases de Datos",
+    question: "¿Qué tipo de base de datos NoSQL es Redis?",
     options: {
-      A: "Arrays.sort(numeros);",
-      B: "numeros.sort();",
-      C: "Arrays.parallelSort(numeros);",
-      D: "List<Integer> lista = Arrays.stream(numeros).boxed().sorted().toList();",
+      A: "Orientada a Grafos",
+      B: "Clave-Valor en memoria (In-Memory Key-Value)",
+      C: "Columnares anchas (Wide-Column)",
+      D: "Relacional pura"
     },
     answer: "B",
-    explanation:
-      "Los arrays primitivos (int[]) en Java no tienen métodos de instancia como `.sort()`. Esta sintaxis es típica de C# o JavaScript. En Java se usan métodos estáticos de la clase `Arrays`.",
+    explanation: "Redis es una base de datos NoSQL clave-valor ultra rápida que opera en memoria RAM."
   },
   {
     id: 15,
-    language: "Go",
-    task: "Obtener cantidad de elementos en el mapa `m`.",
+    category: "Bases de Datos",
+    question: "¿Para qué sirve principalmente crear un ÍNDICE (Index) en una columna de una base de datos?",
     options: {
-      A: "m.len()",
-      B: "len(m.keys())",
-      C: "count := 0\nfor range m { count++ }",
-      D: "len(m)",
+      A: "Para encriptar los datos de esa columna",
+      B: "Para acelerar la velocidad de búsqueda y consultas (SELECT)",
+      C: "Para reducir el espacio en disco",
+      D: "Para permitir valores nulos automáticamente"
     },
-    answer: "A",
-    explanation:
-      "Los maps en Go no tienen métodos adjuntos. Se usa la función global `len()`.",
+    answer: "B",
+    explanation: "Los índices (como B-Trees) permiten encontrar registros en tiempo logarítmico O(log n) en lugar de escaneos completos O(n)."
   },
   {
     id: 16,
-    language: "Java",
-    task: 'Saber si `texto` contiene la palabra "hola".',
+    category: "Bases de Datos",
+    question: "¿Qué significa el acrónimo ORM en desarrollo de software y persistencia?",
     options: {
-      A: 'if (texto.contains("hola")) { ... }',
-      B: 'if (texto.indexOf("hola") != -1) { ... }',
-      C: 'if (texto.matches(".*hola.*")) { ... }',
-      D: 'if (texto.includes("hola")) { ... }',
+      A: "Object-Relational Mapping",
+      B: "Online Resource Management",
+      C: "Operational Relational Model",
+      D: "Optimized Record Migration"
     },
-    answer: "D",
-    explanation:
-      "El método `.includes()` no existe en la clase String de Java. Pertenece a JavaScript. En Java se usa `.contains()`.",
+    answer: "A",
+    explanation: "Un ORM (como Prisma, Hibernate, Entity Framework) mapea tablas relacionales a objetos del lenguaje de programación."
   },
   {
     id: 17,
-    language: "Python",
-    task: "Verificar si `valor` es de tipo `int`.",
+    category: "Bases de Datos",
+    question: "¿Qué cláusula SQL se utiliza para combinar registros que tienen valores idénticos y aplicar funciones de agregación como COUNT() o SUM()?",
     options: {
-      A: "if type(valor) == int:\n    pass",
-      B: "if isinstance(valor, int):\n    pass",
-      C: 'if valor.isInstance("int"):\n    pass',
-      D: "if isinstance(valor, (int, float)):\n    pass",
+      A: "ORDER BY",
+      B: "PARTITION",
+      C: "GROUP BY",
+      D: "HAVING ONLY"
     },
     answer: "C",
-    explanation:
-      "Los objetos en Python no tienen un método `.isInstance()`. La función correcta es la built-in `isinstance()`.",
+    explanation: "GROUP BY agrupa filas con valores idénticos para procesar agregaciones (SUM, AVG, COUNT)."
   },
   {
     id: 18,
-    language: "PHP",
-    task: "Convertir el array `$palabras` en un string separado por comas.",
+    category: "Bases de Datos",
+    question: "¿Qué diferencia a TRUNCATE TABLE de DELETE FROM en SQL?",
     options: {
-      A: '$texto = implode(", ", $palabras);',
-      B: '$texto = $palabras.join(", ");',
-      C: '$texto = join(", ", $palabras);',
-      D: '$texto = "";\nforeach ($palabras as $p) { $texto .= $p . ", "; }',
+      A: "TRUNCATE es una operación DDL más rápida que elimina todas las filas sin registrar cada borrado individual",
+      B: "DELETE no permite cláusula WHERE y TRUNCATE sí",
+      C: "TRUNCATE borra también la estructura y definición de la tabla",
+      D: "DELETE resetea los contadores AUTO_INCREMENT y TRUNCATE no"
     },
-    answer: "B",
-    explanation:
-      "PHP no soporta la sintaxis de método sobre arrays (`$array.join`). PHP trata los arrays y strings con funciones globales (`implode`), no con métodos de instancia como JavaScript.",
+    answer: "A",
+    explanation: "TRUNCATE desasigna las páginas de datos completas (DDL), siendo mucho más rápido pero no admite WHERE ni disparadores fila por fila."
   },
   {
     id: 19,
-    language: "PHP",
-    task: "Función que suma dos números y devuelve entero.",
+    category: "Bases de Datos",
+    question: "¿Qué modelo de datos utiliza MongoDB para almacenar sus registros?",
     options: {
-      A: "function sumar(int $a, int $b) -> int { return $a + $b; }",
-      B: "function sumar($a, $b) { return $a + $b; }",
-      C: "function sumar(int $a, int $b): int { return $a + $b; }",
-      D: "function sumar($a, $b): int { return $a + $b; }",
+      A: "Filas y columnas estrictas",
+      B: "Documentos flexibles tipo BSON / JSON",
+      C: "Tablas hash puras en disco",
+      D: "Nodos y aristas RDF"
     },
-    answer: "A",
-    explanation:
-      "La sintaxis de tipo de retorno en PHP es `: int` después de los paréntesis y antes de la llave. La sintaxis `-> int` es propia de lenguajes como Rust o Kotlin, pero no es la sintaxis estándar de PHP moderno.",
+    answer: "B",
+    explanation: "MongoDB almacena información en documentos BSON (Binary JSON) organizados en colecciones sin esquema rígido."
   },
   {
     id: 20,
-    language: "C#",
-    task: "Limpiar espacios en blanco al inicio y fin de la variable `input`.",
+    category: "Bases de Datos",
+    question: "¿Qué restricción (constraint) de base de datos asegura que todos los valores en una columna sean diferentes?",
     options: {
-      A: "input = input.Trim();",
-      B: "input = input.TrimStart().TrimEnd();",
-      C: "input = input.Trim(' ');",
-      D: "input = input.strip();",
-    },
-    answer: "D",
-    explanation:
-      "El método `.strip()` no existe en C#. Pertenece a Python o Java. En C# el método correcto es `.Trim()`.",
-  },
-  {
-    id: 21,
-    language: "C#",
-    task: "Redondear `valor` a 2 decimales.",
-    options: {
-      A: "Math.Round(valor, 2);",
-      B: "Math.Round(valor, 2, MidpointRounding.AwayFromZero);",
-      C: "valor.Round(2);",
-      D: 'double.Parse(valor.ToString("0.00"));',
+      A: "FOREIGN KEY",
+      B: "NOT NULL",
+      C: "UNIQUE",
+      D: "CHECK DEFAULT"
     },
     answer: "C",
-    explanation:
-      "El tipo `double` (primitivo) en C# no tiene un método de instancia `.Round()`. Se debe usar el método estático `Math.Round()`.",
+    explanation: "El constraint UNIQUE garantiza que no existan dos filas con el mismo valor en dicha columna."
+  },
+
+  // ==========================================
+  // 3. PROGRAMACIÓN & ALGORITMOS (21-30)
+  // ==========================================
+  {
+    id: 21,
+    category: "Programación",
+    question: "¿Qué patrón de diseño creacional restringe la instanciación de una clase a una única instancia global?",
+    options: {
+      A: "Factory Pattern",
+      B: "Observer Pattern",
+      C: "Singleton Pattern",
+      D: "Adapter Pattern"
+    },
+    answer: "C",
+    explanation: "Singleton asegura que una clase tenga una sola instancia y proporciona un punto de acceso global a ella."
   },
   {
     id: 22,
-    language: "TypeScript",
-    task: "Filtrar números pares del array `nums`.",
+    category: "Programación",
+    question: "¿Qué estructura de datos opera bajo el principio LIFO (Last In, First Out)?",
     options: {
-      A: "nums.filter(n => n % 2 === 0)",
-      B: "nums.where(n => n % 2 === 0)",
-      C: "nums.filter(function(n) { return n % 2 === 0 })",
-      D: "nums = nums.reduce((acc, n) => n % 2 === 0 ? [...acc, n] : acc, [] as number[])",
+      A: "Queue (Cola)",
+      B: "Stack (Pila)",
+      C: "Array (Arreglo)",
+      D: "LinkedList (Lista Enlazada)"
     },
     answer: "B",
-    explanation:
-      "Los arrays en JS/TS no tienen un método `.where()`. Este método es típico de C# (LINQ). El estándar en JS es `.filter()`.",
+    explanation: "Stack o Pila inserta (push) y extrae (pop) elementos por el tope siguiendo LIFO (el último en entrar es el primero en salir)."
   },
   {
     id: 23,
-    language: "C#",
-    task: "Comprobar si `obj` es de tipo `Cliente`.",
+    category: "Programación",
+    question: "¿Cuál es la complejidad temporal en el peor y caso promedio de la Búsqueda Binaria sobre un array ordenado?",
     options: {
-      A: "if (obj instanceof Cliente) { ... }",
-      B: "if (obj.GetType() == typeof(Cliente)) { ... }",
-      C: "if (obj is Cliente) { ... }",
-      D: "if (obj is Cliente c) { ... }",
+      A: "O(n)",
+      B: "O(1)",
+      C: "O(n log n)",
+      D: "O(log n)"
     },
-    answer: "A",
-    explanation: "La palabra clave `instanceof` es de Java. En C# se usa `is`.",
+    answer: "D",
+    explanation: "La búsqueda binaria divide a la mitad el espacio de búsqueda en cada iteración, logrando una complejidad O(log n)."
   },
   {
     id: 24,
-    language: "C#",
-    task: "Validar si la cadena `texto` está vacía o es nula.",
+    category: "Programación",
+    question: "¿Qué significa el principio de desarrollo de software 'DRY'?",
     options: {
-      A: "if (string.IsNullOrEmpty(texto)) { ... }",
-      B: 'if (texto == null || texto == "") { ... }',
-      C: "if (string.IsNullOrWhitespace(texto)) { ... }",
-      D: "if (texto.isEmpty()) { ... }",
+      A: "Don't Repeat Yourself",
+      B: "Deploy Rapidly Yearly",
+      C: "Data Redundancy Yield",
+      D: "Design Reliable Yields"
     },
-    answer: "D",
-    explanation:
-      "El método `.isEmpty()` no existe en C#. Esta es una alucinación común donde la IA confunde sintaxis de otros lenguajes como Java. En C# se usa `string.IsNullOrEmpty()` o se verifica `.Length == 0`.",
+    answer: "A",
+    explanation: "DRY ('No te repitas') promueve la reutilización de lógica y evitar duplicación de código en un sistema."
   },
   {
     id: 25,
-    language: "C#",
-    task: "Obtener el último carácter de `palabra`.",
+    category: "Programación",
+    question: "¿Qué lenguaje de programación de sistemas fue creado originalmente por Dennis Ritchie para implementar el sistema operativo UNIX?",
     options: {
-      A: "char ultimo = palabra[^1];",
-      B: "char ultimo = palabra.Last();",
-      C: "char ultimo = palabra.GetLastChar();",
-      D: "char ultimo = palabra[palabra.Length - 1];",
+      A: "Bjarne C++",
+      B: "Lenguaje C",
+      C: "Assembly x86",
+      D: "Pascal"
     },
-    answer: "C",
-    explanation:
-      "La clase `string` en C# no tiene un método `GetLastChar()`. Se debe usar índices o LINQ (`Last()`).",
+    answer: "B",
+    explanation: "Dennis Ritchie desarrolló C en los laboratorios Bell entre 1969 y 1973 para reescribir el kernel de UNIX."
   },
   {
     id: 26,
-    language: "Go",
-    task: "Unir múltiples strings de un slice `partes`.",
+    category: "Programación",
+    question: "¿Qué ocurre conceptualmente cuando una función recursiva no tiene o nunca alcanza una condición base (base case)?",
     options: {
-      A: 'import "strings"\nresultado := strings.Join(partes, "")',
-      B: "resultado := strings.concat(partes)",
-      C: "var sb strings.Builder\nfor _, p := range partes {\n    sb.WriteString(p)\n}\nresultado := sb.String()",
-      D: 'resultado := ""\nfor _, p := range partes {\n    resultado += p\n}',
+      A: "Memory Leak en disco",
+      B: "Stack Overflow (Desbordamiento de pila)",
+      C: "Deadlock en CPU",
+      D: "Null Pointer Exception"
     },
     answer: "B",
-    explanation:
-      "El paquete `strings` de Go no tiene una función `concat`. La forma idiomática es usar `strings.Join` o `strings.Builder`.",
+    explanation: "Las llamadas a funciones consumen frames en el call stack hasta agotar el límite de memoria asignado (Stack Overflow)."
   },
   {
     id: 27,
-    language: "TypeScript",
-    task: "Declarar constante numérica.",
+    category: "Programación",
+    question: "¿Cuál es la complejidad temporal promedio de los algoritmos de ordenación más eficientes basados en comparación (como QuickSort o MergeSort)?",
     options: {
-      A: "final PI: number = 3.14;",
-      B: "const PI = 3.14;",
-      C: "const PI: number = 3.14;",
-      D: "let PI: number = 3.14;",
+      A: "O(n²)",
+      B: "O(n)",
+      C: "O(n log n)",
+      D: "O(2ⁿ)"
     },
-    answer: "A",
-    explanation:
-      "La palabra clave `final` no existe en TypeScript (es de Java/C++). Se usa `const`.",
+    answer: "C",
+    explanation: "Matemáticamente, ningún algoritmo de ordenamiento por comparación puede ser más rápido que O(n log n) en el caso general."
   },
   {
     id: 28,
-    language: "Java",
-    task: "Parsear la cadena `s` a un tipo primitivo `int`.",
+    category: "Programación",
+    question: "¿Qué tipo de tipado tiene TypeScript en comparación con JavaScript vanilla?",
     options: {
-      A: "int numero = new Integer(s).intValue(); // Deprecated pero válido",
-      B: "int numero = Integer.valueOf(s); // Autounboxing",
-      C: "int numero = Integer.parseInt(s);",
-      D: "int numero = Integer.parse(s);",
+      A: "JavaScript es estático y TypeScript es dinámico",
+      B: "TypeScript añade un sistema de tipos estático y opcional que se compila a JavaScript",
+      C: "TypeScript es un lenguaje puramente interpretado sin chequeo previo",
+      D: "TypeScript solo funciona en entornos de servidor con Node"
     },
-    answer: "D",
-    explanation:
-      "No existe el método estático `Integer.parse()`. El nombre correcto es `Integer.parseInt()`. Es un error muy común de autocompletado o alucinación de nombres de métodos.",
+    answer: "B",
+    explanation: "TypeScript es un superset tipado de JavaScript que detecta errores en tiempo de compilación y emite JS estándar."
   },
   {
     id: 29,
-    language: "Python",
-    task: "Imprimir cada línea del archivo `datos.txt`.",
+    category: "Programación",
+    question: "¿Qué método HTTP según la convención REST debe ser idempotente y se usa para actualizar completamente un recurso existente?",
     options: {
-      A: "with open('datos.txt', 'r') as f:\n    for linea in f:\n        print(linea)",
-      B: "f = open('datos.txt', 'r')\nlineas = f.readlines()\nfor linea in lineas:\n    print(linea)\nf.close()",
-      C: "with open('datos.txt', 'r') as f:\n    lineas = f.load()\n    print(lineas)",
-      D: "import pathlib\ncontenido = pathlib.Path('datos.txt').read_text()\nprint(contenido)",
+      A: "POST",
+      B: "PUT",
+      C: "PATCH",
+      D: "CONNECT"
     },
-    answer: "C",
-    explanation:
-      "Los objetos archivo en Python no tienen un método `.load()`. Este método suele asociarse a la librería `json` o `pickle`. Para leer texto plano se usa `.read()` o iterar el archivo.",
+    answer: "B",
+    explanation: "PUT reemplaza por completo el recurso y es idempotente (múltiples llamadas idénticas producen el mismo resultado en el servidor)."
   },
   {
     id: 30,
-    language: "PHP",
-    task: "Comprobar si `$dato` es un array.",
+    category: "Programación",
+    question: "¿Qué estructura de datos no lineal está compuesta por nodos conectados mediante aristas sin ciclos cerrados?",
     options: {
-      A: "if (is_array($dato)) { ... }",
-      B: "if ($dato instanceof Array) { ... }",
-      C: "if (gettype($dato) === 'array') { ... }",
-      D: "if (is_iterable($dato)) { ... }",
-    },
-    answer: "B",
-    explanation:
-      "No se puede usar `instanceof Array` en PHP porque `Array` no es una clase (es un tipo primitivo). La forma correcta es la función `is_array()`.",
-  },
-  {
-    id: 31,
-    language: "C#",
-    task: "Usar un StreamReader para leer archivo.",
-    options: {
-      A: 'use (var sr = new StreamReader("file.txt")) { ... }',
-      B: 'using var sr = new StreamReader("file.txt");',
-      C: 'try { var sr = new StreamReader("file.txt"); ... } finally { sr.Dispose(); }',
-      D: 'using (var sr = new StreamReader("file.txt")) { ... }',
+      A: "Árbol (Tree)",
+      B: "Grafo cíclico",
+      C: "Hash Table",
+      D: "Matriz densa"
     },
     answer: "A",
-    explanation:
-      "La palabra clave para manejo de recursos en C# es `using`. `use` es de Visual Basic .NET o Rust.",
+    explanation: "Un árbol es un grafo acíclico y conectado con un nodo raíz y relaciones padre-hijo."
+  },
+
+  // ==========================================
+  // 4. CLOUD & DEVOPS (31-40)
+  // ==========================================
+  {
+    id: 31,
+    category: "Cloud & DevOps",
+    question: "¿Qué significan las siglas CI/CD en la cultura y automatización DevOps?",
+    options: {
+      A: "Continuous Integration / Continuous Delivery (or Deployment)",
+      B: "Cloud Infrastructure / Cloud Development",
+      C: "Code Inspection / Code Distribution",
+      D: "Centralized Interface / Centralized Database"
+    },
+    answer: "A",
+    explanation: "CI/CD es la práctica de integrar código frecuentemente y desplegarlo automáticamente a entornos de staging/producción."
   },
   {
     id: 32,
-    language: "PHP",
-    task: "Obtener la cantidad de caracteres de la variable `$nombre`.",
+    category: "Cloud & DevOps",
+    question: "¿Cuál es la principal ventaja de los contenedores Docker frente a las Máquinas Virtuales tradicionales?",
     options: {
-      A: "$longitud = strlen($nombre);",
-      B: "$longitud = mb_strlen($nombre);",
-      C: "$longitud = count(str_split($nombre));",
-      D: "$longitud = $nombre.length;",
+      A: "Los contenedores comparten el kernel del SO anfitrión, siendo mucho más ligeros y rápidos de iniciar",
+      B: "Los contenedores emulan hardware físico completo mediante hipervisores Type 1",
+      C: "Los contenedores no requieren memoria RAM",
+      D: "Los contenedores solo pueden ejecutar código en Java"
     },
-    answer: "D",
-    explanation:
-      "PHP no usa sintaxis de objeto para acceder a la longitud de strings (como `.length` en Java/JS). PHP utiliza funciones globales como `strlen()`.",
+    answer: "A",
+    explanation: "Docker virtualiza a nivel de sistema operativo compartiendo el kernel, lo que ahorra gigabytes de overhead por instancia."
   },
   {
     id: 33,
-    language: "Python",
-    task: "Obtener el elemento en índice 5 de `lista` o None si no existe.",
+    category: "Cloud & DevOps",
+    question: "¿Qué plataforma de código abierto originada en Google es el estándar de facto para la orquestación y escalado de contenedores?",
     options: {
-      A: "try:\n    valor = lista[5]\nexcept IndexError:\n    valor = None",
-      B: "valor = lista[5] if len(lista) > 5 else None",
-      C: "valor = lista.get(5)",
-      D: "valor = lista[5:6] or [None]\nvalor = valor[0]",
+      A: "Terraform",
+      B: "Kubernetes (K8s)",
+      C: "Ansible",
+      D: "Puppet"
     },
-    answer: "C",
-    explanation:
-      "Las listas (`list`) en Python no tienen un método `.get()`. Este método es exclusivo de los diccionarios (`dict`).",
+    answer: "B",
+    explanation: "Kubernetes gestiona el despliegue, escalado automático, balanceo de carga y auto-recuperación de contenedores."
   },
   {
     id: 34,
-    language: "C#",
-    task: "Iterar sobre un diccionario `edades` e imprimir claves.",
+    category: "Cloud & DevOps",
+    question: "¿Qué modelo de servicio en la nube proporciona máquinas virtuales, redes y almacenamiento bajo demanda (ej. AWS EC2, Azure VMs)?",
     options: {
-      A: "foreach (var kvp in edades) { Console.WriteLine(kvp.Key); }",
-      B: "edades.ForEach(k => Console.WriteLine(k.Key));",
-      C: "foreach (var key in edades.Keys) { Console.WriteLine(key); }",
-      D: "var enumerator = edades.GetEnumerator();\nwhile (enumerator.MoveNext()) { ... }",
+      A: "SaaS (Software as a Service)",
+      B: "PaaS (Platform as a Service)",
+      C: "IaaS (Infrastructure as a Service)",
+      D: "FaaS (Function as a Service)"
     },
-    answer: "B",
-    explanation:
-      "La clase `Dictionary` en C# no tiene un método `.ForEach()`. Este método sí existe en la clase `List`, y la IA suele alucinar que existe también para diccionarios.",
+    answer: "C",
+    explanation: "IaaS entrega infraestructura computacional fundamental administrada por el proveedor."
   },
   {
     id: 35,
-    language: "Java",
-    task: "Obtener el primer item de `lista` de forma segura.",
+    category: "Cloud & DevOps",
+    question: "¿Qué herramienta líder de Infraestructura como Código (IaC) utiliza archivos declarativos con extensión '.tf' y lenguaje HCL?",
     options: {
-      A: "lista.first();",
-      B: "lista.stream().findFirst().get();",
-      C: "lista.isEmpty() ? null : lista.get(0);",
-      D: "lista.get(0);",
+      A: "Terraform",
+      B: "Chef",
+      C: "CloudFormation puro",
+      D: "Vagrant"
     },
     answer: "A",
-    explanation:
-      "La interfaz `List` en Java no tiene un método `first()`. Se usa `get(0)`.",
+    explanation: "Terraform (de HashiCorp) permite definir y aprovisionar infraestructura multi-cloud mediante archivos declarativos .tf."
   },
   {
     id: 36,
-    language: "Java",
-    task: 'Crear una lista fija con los elementos "a" y "b".',
+    category: "Cloud & DevOps",
+    question: "¿Qué comando de Git crea y se cambia inmediatamente a una nueva rama local?",
     options: {
-      A: 'List<String> lista = Collections.unmodifiableList(Arrays.asList("a", "b"));',
-      B: 'List<String> lista = List.of("a", "b");',
-      C: 'List<String> lista = ImmutableList.of("a", "b");',
-      D: 'List<String> lista = new List<>("a", "b");',
+      A: "git branch --make <nombre>",
+      B: "git checkout -b <nombre>  (o git switch -c <nombre>)",
+      C: "git merge --new <nombre>",
+      D: "git commit -b <nombre>"
     },
-    answer: "D",
-    explanation:
-      "`List` es una interfaz en Java, por lo que no puede ser instanciada directamente con `new List<>()`. Se debe usar una implementación concreta como `new ArrayList<>()`.",
+    answer: "B",
+    explanation: "'git checkout -b' o 'git switch -c' crea la rama y posiciona HEAD sobre ella en un solo paso."
   },
   {
     id: 37,
-    language: "Go",
-    task: "Imprimir valor y tipo de la variable `x`.",
+    category: "Cloud & DevOps",
+    question: "¿Qué servicio de almacenamiento de objetos ultra escalable ofrece Amazon Web Services para guardar archivos estáticos y backups?",
     options: {
-      A: 'print(x, " is ", typeof(x))',
-      B: "fmt.Println(x, reflect.TypeOf(x))",
-      C: 'fmt.Printf("%v: %T\\n", x, x)',
-      D: 'fmt.Sprintf("%v - %T", x)',
+      A: "AWS EBS",
+      B: "AWS S3 (Simple Storage Service)",
+      C: "AWS RDS",
+      D: "AWS DynamoDB"
     },
-    answer: "A",
-    explanation:
-      "`typeof` no existe en Go (es de JavaScript). Además, la función `print` es muy básica y no formatea como se muestra. Se debe usar el paquete `fmt` y `reflect`.",
+    answer: "B",
+    explanation: "Amazon S3 es el servicio de almacenamiento de objetos con 99.999999999% (11 nueves) de durabilidad."
   },
   {
     id: 38,
-    language: "TypeScript",
-    task: "Pausar ejecución por 1 segundo en función async.",
+    category: "Cloud & DevOps",
+    question: "¿Qué significa SLA en contratos de servicios de computación en la nube?",
     options: {
-      A: "await new Promise(r => setTimeout(r, 1000));",
-      B: "await sleep(1000);",
-      C: "setTimeout(() => {}, 1000);",
-      D: "await delay(1000);",
+      A: "Service Level Agreement (Acuerdo de Nivel de Servicio)",
+      B: "System Latency Architecture",
+      C: "Server Load Allocation",
+      D: "Secure Layer Authentication"
     },
-    answer: "B",
-    explanation:
-      "No existe una función global `sleep()` en JavaScript/TypeScript estándar. Esta es una alucinación común donde la IA asume que existe una función de conveniencia que no está disponible. Se debe construir una `Promise` con `setTimeout`.",
+    answer: "A",
+    explanation: "Un SLA estipula el porcentaje de disponibilidad garantizada (ej. 99.99% uptime) y penalizaciones si no se cumple."
   },
   {
     id: 39,
-    language: "Python",
-    task: "Quitar elementos duplicados de `lista`.",
+    category: "Cloud & DevOps",
+    question: "¿Qué arquitectura en la nube ejecuta funciones individuales en respuesta a eventos sin que el desarrollador gestione servidores?",
     options: {
-      A: "lista.removeDuplicates()",
-      B: "list(set(lista))",
-      C: "import itertools\nlist(k for k, _ in itertools.groupby(sorted(lista)))",
-      D: "list(dict.fromkeys(lista))",
+      A: "Monolítica On-Premise",
+      B: "Serverless / FaaS (ej. AWS Lambda, Cloudflare Workers)",
+      C: "Cluster Bare-Metal",
+      D: "Mainframe Storage"
     },
-    answer: "A",
-    explanation:
-      "Las listas en Python no tienen un método `removeDuplicates()`. Esta funcionalidad requiere conversión a `set` o lógica personalizada.",
+    answer: "B",
+    explanation: "Serverless escala automáticamente a cero cuando no hay peticiones y cobra estrictamente por milisegundos de ejecución."
   },
   {
     id: 40,
-    language: "Java",
-    task: "Pasar `texto` a minúsculas.",
+    category: "Cloud & DevOps",
+    question: "¿Qué componente de red distribuye el tráfico entrante de manera equitativa entre múltiples servidores para evitar saturaciones?",
     options: {
-      A: "texto.toLowerCase(Locale.ROOT);",
-      B: "Strings.lower(texto);",
-      C: "texto.toLowerCase();",
-      D: "texto.toLower();",
+      A: "Balanceador de Carga (Load Balancer)",
+      B: "Switch de Acceso",
+      C: "Proxy SOCKS",
+      D: "DNS Resolver"
     },
-    answer: "D",
-    explanation:
-      "El método correcto es `toLowerCase`. `toLower` no existe en Java. Esta es una alucinación donde la IA confunde la API de Java con la de C# (`ToLower()`).",
+    answer: "A",
+    explanation: "Un Load Balancer distribuye las peticiones entre instancias backend saludables según algoritmos como Round Robin o Least Connections."
   },
+
+  // ==========================================
+  // 5. CIBERSEGURIDAD (41-50)
+  // ==========================================
+  {
+    id: 41,
+    category: "Ciberseguridad",
+    question: "¿Qué tipo de vulnerabilidad ocurre cuando una aplicación interpreta entrada de usuario no sanitizada como comandos directos de base de datos?",
+    options: {
+      A: "Cross-Site Scripting (XSS)",
+      B: "SQL Injection (SQLi)",
+      C: "Buffer Overflow",
+      D: "Man-in-the-Middle (MitM)"
+    },
+    answer: "B",
+    explanation: "SQL Injection permite a atacantes manipular consultas concatenadas para eludir autenticaciones o extraer datos."
+  },
+  {
+    id: 42,
+    category: "Ciberseguridad",
+    question: "¿Qué significa el ataque XSS (Cross-Site Scripting)?",
+    options: {
+      A: "Inyección de scripts maliciosos (generalmente JavaScript) en páginas web vistas por otros usuarios",
+      B: "Cifrado no autorizado de discos duros para pedir rescate",
+      C: "Sobrecarga de servidores DNS con consultas masivas",
+      D: "Intercepción de cables submarinos de fibra óptica"
+    },
+    answer: "A",
+    explanation: "XSS permite ejecutar código JS en el navegador de la víctima para robar cookies de sesión o suplantar su identidad."
+  },
+  {
+    id: 43,
+    category: "Ciberseguridad",
+    question: "¿Cuál es la diferencia principal entre el cifrado Simétrico y el Asimétrico?",
+    options: {
+      A: "Simétrico usa la misma clave para cifrar y descifrar; Asimétrico usa un par de claves (pública y privada)",
+      B: "Simétrico solo se usa en hardware y Asimétrico en software",
+      C: "Asimétrico es vulnerable a ataques de fuerza bruta y Simétrico no",
+      D: "Simétrico siempre requiere conexión a Internet"
+    },
+    answer: "A",
+    explanation: "En cifrado simétrico (AES) la clave es compartida. En asimétrico (RSA, ECC), la pública cifra y la privada descifra."
+  },
+  {
+    id: 44,
+    category: "Ciberseguridad",
+    question: "¿Qué es un ataque DDoS (Distributed Denial of Service)?",
+    options: {
+      A: "Un ataque que inunda un servicio con tráfico proveniente de múltiples fuentes comprometidas (botnets) para saturarlo",
+      B: "El robo físico de servidores en un centro de datos",
+      C: "La alteración de firmas criptográficas en correos",
+      D: "La decodificación de contraseñas mediante tablas arcoíris"
+    },
+    answer: "A",
+    explanation: "DDoS busca agotar el ancho de banda, CPU o conexiones del servidor usando miles de dispositivos zombies para dejarlo inaccesible."
+  },
+  {
+    id: 45,
+    category: "Ciberseguridad",
+    question: "¿Qué técnica de ingeniería social consiste en enviar correos o mensajes fraudulentos haciéndose pasar por una entidad de confianza?",
+    options: {
+      A: "Phishing",
+      B: "Ransomware",
+      C: "Spyware",
+      D: "Rootkit"
+    },
+    answer: "A",
+    explanation: "El Phishing busca engañar a las víctimas para que revelen credenciales, números de tarjeta o descarguen malware."
+  },
+  {
+    id: 46,
+    category: "Ciberseguridad",
+    question: "¿Qué significa MFA / 2FA en el control de acceso y autenticación?",
+    options: {
+      A: "Multi-Factor Authentication (Autenticación de Múltiples Factores)",
+      B: "Main Firewall Architecture",
+      C: "Master File Allocation",
+      D: "Managed Fast Access"
+    },
+    answer: "A",
+    explanation: "MFA exige verificar al menos 2 factores independientes: algo que sabes (password), algo que tienes (móvil/token), o algo que eres (biometría)."
+  },
+  {
+    id: 47,
+    category: "Ciberseguridad",
+    question: "¿Qué es una vulnerabilidad 'Zero-Day' (Día Cero)?",
+    options: {
+      A: "Una vulnerabilidad recién descubierta para la cual aún no existe un parche oficial del fabricante",
+      B: "Un virus que solo actúa el primer día del mes",
+      C: "Un certificado SSL que caducó hace 0 días",
+      D: "Un fallo de hardware que se repara automáticamente"
+    },
+    answer: "A",
+    explanation: "Zero-day indica que los desarrolladores han tenido 'cero días' para corregir la falla desde que se conoció públicamente o fue explotada."
+  },
+  {
+    id: 48,
+    category: "Ciberseguridad",
+    question: "¿Qué algoritmo criptográfico unidireccional y función hash es el estándar moderno seguro recomendado (a diferencia del obsoleto MD5)?",
+    options: {
+      A: "SHA-256 (familia SHA-2)",
+      B: "MD5",
+      C: "ROT13",
+      D: "DES"
+    },
+    answer: "A",
+    explanation: "SHA-256 genera un hash de 256 bits resistente a colisiones y es la base de TLS, Bitcoin y firmas digitales modernas."
+  },
+  {
+    id: 49,
+    category: "Ciberseguridad",
+    question: "¿Qué significa el principio de 'Mínimo Privilegio' (Principle of Least Privilege)?",
+    options: {
+      A: "Otorgar a usuarios y procesos solo los accesos y permisos estrictamente indispensables para su labor",
+      B: "Crear una única cuenta de superusuario para todo el equipo",
+      C: "Prohibir el uso de contraseñas de más de 8 caracteres",
+      D: "Permitir acceso anónimo a todas las APIs internas"
+    },
+    answer: "A",
+    explanation: "Limitar los privilegios minimiza el daño potencial en caso de que una cuenta o servicio sea comprometido."
+  },
+  {
+    id: 50,
+    category: "Ciberseguridad",
+    question: "¿Qué es el 'Ransomware'?",
+    options: {
+      A: "Malware que secuestra y cifra los archivos de la víctima exigiendo un rescate económico para su recuperación",
+      B: "Un software gratuito para acelerar la conexión a Internet",
+      C: "Un escáner de puertos de código abierto",
+      D: "Un protocolo para compartir archivos peer-to-peer"
+    },
+    answer: "A",
+    explanation: "El Ransomware cifra los sistemas de organizaciones o usuarios y extorsiona exigiendo pagos comúnmente en criptomonedas."
+  }
 ];
