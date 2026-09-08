@@ -19,7 +19,7 @@ export async function joinGameAction(name: string, deviceId: string, avatarColor
     .from("players")
     .select("id, name, score, avatar_color")
     .eq("device_id", deviceId)
-    .single();
+    .maybeSingle();
 
   if (existingPlayer) {
     await supabase
@@ -75,7 +75,7 @@ export async function submitAnswerAction(
     .select("id")
     .eq("player_id", playerId)
     .eq("question_index", questionIndex)
-    .single();
+    .maybeSingle();
 
   if (existingAnswer) {
     return { success: false, alreadyAnswered: true };
@@ -101,7 +101,7 @@ export async function submitAnswerAction(
       .from("players")
       .select("score")
       .eq("id", playerId)
-      .single();
+      .maybeSingle();
 
     if (player) {
       await supabase
@@ -126,11 +126,10 @@ export async function timeoutQuestionAction(questionIndex: number) {
     .from("game")
     .select("phase, question_index")
     .eq("id", 1)
-    .single();
+    .maybeSingle();
 
   // Cambiar a fase 'reveal' cuando se termina el tiempo de 15s
   if (game && game.phase === "question" && game.question_index === questionIndex) {
-    // Obtener estadísticas de quiénes acertaron
     const { data: correctAnswers } = await supabase
       .from("answers")
       .select("player_name")
@@ -162,7 +161,7 @@ export async function advanceToNextQuestionAction(currentQuestionIndex: number) 
     .from("game")
     .select("total_questions, question_index, phase")
     .eq("id", 1)
-    .single();
+    .maybeSingle();
 
   if (!game) return { success: false };
 
@@ -200,15 +199,15 @@ export async function advanceToNextQuestionAction(currentQuestionIndex: number) 
 export async function startGameAction(totalQuestions: number = 20) {
   if (!isSupabaseConfigured) return { success: true };
 
-  // Reiniciar puntajes de todos los jugadores a 0
-  await supabase.from("players").update({ score: 0 }).neq("id", "00000000-0000-0000-0000-000000000000");
+  // 1. Reiniciar puntajes de todos los jugadores a 0
+  await supabase.from("players").update({ score: 0 }).not("id", "is", null);
 
-  // Limpiar historial de respuestas
-  await supabase.from("answers").delete().neq("id", -1);
+  // 2. Limpiar historial de respuestas de partidas anteriores
+  await supabase.from("answers").delete().gte("id", 0);
 
   const count = Math.min(Math.max(5, totalQuestions), QUESTIONS.length);
 
-  // Iniciar juego en la pregunta 0 con timer
+  // 3. Iniciar juego en la pregunta 0
   await supabase
     .from("game")
     .update({
@@ -228,6 +227,11 @@ export async function startGameAction(totalQuestions: number = 20) {
 export async function resetGameAction() {
   if (!isSupabaseConfigured) return { success: true };
 
+  // Reiniciar puntajes a 0 y limpiar respuestas
+  await supabase.from("players").update({ score: 0 }).not("id", "is", null);
+  await supabase.from("answers").delete().gte("id", 0);
+
+  // Volver a sala de espera
   await supabase
     .from("game")
     .update({
@@ -246,9 +250,22 @@ export async function resetGameAction() {
 export async function clearAllPlayersAction() {
   if (!isSupabaseConfigured) return { success: true };
 
-  await supabase.from("answers").delete().neq("id", -1);
-  await supabase.from("players").delete().neq("id", "00000000-0000-0000-0000-000000000000");
-  await resetGameAction();
+  // Borrar todas las respuestas y todos los jugadores
+  await supabase.from("answers").delete().gte("id", 0);
+  await supabase.from("players").delete().not("id", "is", null);
+
+  // Volver a sala de espera limpia
+  await supabase
+    .from("game")
+    .update({
+      phase: "waiting",
+      question_index: 0,
+      question_started_at: null,
+      winner_of_question: null,
+      last_correct_answer: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", 1);
 
   return { success: true };
 }

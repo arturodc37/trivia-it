@@ -643,12 +643,30 @@ export default function GamePage() {
           </div>
         </div>
 
-        {/* Buttons */}
+        {/* Next Round Banner / Live sync indicator */}
+        <div className="w-full text-center p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 mb-3 flex items-center justify-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span>Esperando que el organizador inicie una nueva partida...</span>
+        </div>
+
+        {/* Action Buttons */}
         <div className="w-full flex items-center gap-3">
           <button
             type="button"
+            onClick={() => {
+              localStorage.removeItem("rapidagil_player_name");
+              localStorage.removeItem("rapidagil_player_id");
+              router.push("/");
+            }}
+            className="flex-1 py-3 px-4 rounded-xl font-bold text-xs bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+          >
+            <span>Cambiar de Jugador / Salir</span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => router.push("/")}
-            className="flex-1 py-3.5 px-4 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 flex items-center justify-center gap-2 cursor-pointer transition-colors"
+            className="flex-1 py-3 px-4 rounded-xl font-bold text-xs bg-cyan-600 hover:bg-cyan-500 text-white shadow-md shadow-cyan-600/20 flex items-center justify-center gap-2 cursor-pointer transition-colors"
           >
             <HomeIcon className="w-4 h-4" />
             <span>Volver al Inicio</span>
