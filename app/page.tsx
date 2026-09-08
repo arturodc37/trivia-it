@@ -220,15 +220,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Footer / Admin Link */}
-      <footer className="w-full text-center py-4 text-xs text-slate-500 flex items-center justify-between">
-        <span>Rapidagil IT • v1.0</span>
-        <a
-          href="/admin"
-          className="text-slate-400 hover:text-cyan-400 underline underline-offset-4 transition-colors"
-        >
-          Panel Organizador (Admin) →
-        </a>
+      {/* Footer */}
+      <footer className="w-full text-center py-4 text-xs text-slate-500">
+        <span>Rapidagil IT • Desafío Multijugador en Vivo</span>
       </footer>
     </main>
   );

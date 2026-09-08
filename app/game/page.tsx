@@ -348,11 +348,7 @@ export default function GamePage() {
 
         {/* Footer info */}
         <footer className="w-full text-center py-2 text-xs text-slate-500">
-          ¿Eres el organizador? Ve al{" "}
-          <a href="/admin" className="text-cyan-400 underline font-medium">
-            Panel de Control
-          </a>{" "}
-          para dar inicio.
+          <span>La partida comenzará tan pronto como el organizador dé inicio.</span>
         </footer>
       </main>
     );

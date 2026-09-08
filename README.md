@@ -59,7 +59,5 @@ git push origin main
 
 ---
 
-## 📱 URLs de Acceso
-
 - **Jugadores (Móviles):** `https://tu-proyecto.vercel.app/`
-- **Organizador (Admin):** `https://tu-proyecto.vercel.app/admin`
+- **Organizador (Panel Secreto):** `https://tu-proyecto.vercel.app/admin997784`
