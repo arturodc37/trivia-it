@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { joinGameAction } from "./actions";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { GameState } from "@/lib/types";
-import { Sparkles, Users, Zap, Shield, HelpCircle, ArrowRight, Smartphone, Trophy } from "lucide-react";
+import { Sparkles, Users, Zap, ArrowRight, Smartphone, Trophy, Timer } from "lucide-react";
 
 const AVATAR_COLORS = [
   { name: "Cyan", value: "#06b6d4" },
@@ -25,7 +25,6 @@ export default function Home() {
   const [playerCount, setPlayerCount] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState | null>(null);
 
-  // Initialize or retrieve unique device ID
   useEffect(() => {
     let deviceId = localStorage.getItem("rapidagil_device_id");
     if (!deviceId) {
@@ -37,7 +36,6 @@ export default function Home() {
     const savedColor = localStorage.getItem("rapidagil_avatar_color");
     if (savedColor) setSelectedColor(savedColor);
 
-    // Fetch initial player count and game status if supabase is configured
     if (isSupabaseConfigured) {
       supabase.from("players").select("id", { count: "exact" }).then(({ count }) => {
         if (count !== null) setPlayerCount(count);
@@ -47,7 +45,6 @@ export default function Home() {
         if (data) setGameState(data as GameState);
       });
 
-      // Realtime subscription for player count
       const channel = supabase
         .channel("home_lobby")
         .on("postgres_changes", { event: "*", schema: "public", table: "players" }, () => {
@@ -111,7 +108,7 @@ export default function Home() {
           Rapidagil IT
         </h1>
         <p className="text-slate-400 text-sm mt-2 max-w-xs mx-auto">
-          ¿Quién es el más rápido de la sala? El primero en acertar se lleva el punto.
+          ¡Todos los que acierten suman puntos según su velocidad de respuesta!
         </p>
 
         {/* Live Lobby Pill */}
@@ -206,19 +203,19 @@ export default function Home() {
           </button>
         </form>
 
-        {/* Quick Rules */}
-        <div className="mt-6 pt-5 border-t border-slate-800/80 space-y-2 text-xs text-slate-400">
+        {/* Dynamic Scoring Rules */}
+        <div className="mt-6 pt-5 border-t border-slate-800/80 space-y-2.5 text-xs text-slate-400">
           <div className="flex items-center gap-2">
-            <Zap className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
-            <span><strong>15 segundos</strong> por pregunta.</span>
+            <Timer className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+            <span><strong>15 segundos</strong> para que todos respondan la pregunta.</span>
           </div>
           <div className="flex items-center gap-2">
-            <Trophy className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
-            <span>El <strong>primero</strong> en marcar la respuesta correcta suma 1 punto.</span>
+            <Zap className="w-4 h-4 text-amber-400 flex-shrink-0" />
+            <span>Puntaje por velocidad: si aciertas con <strong>14s</strong> restantes ganas <strong>14 pts</strong>.</span>
           </div>
           <div className="flex items-center gap-2">
-            <Smartphone className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-            <span>Todos los móviles sincronizados en tiempo real.</span>
+            <Trophy className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span>Al final de los 15s se revela la respuesta y avanza al siguiente reto.</span>
           </div>
         </div>
       </div>

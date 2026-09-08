@@ -15,12 +15,8 @@ import {
   CheckCircle2,
   XCircle,
   Zap,
-  ArrowRight,
-  Shield,
-  Award,
   Crown,
   Sparkles,
-  RefreshCw,
   Home as HomeIcon,
   HelpCircle,
 } from "lucide-react";
@@ -78,7 +74,7 @@ export default function GamePage() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<Option | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [answerResult, setAnswerResult] = useState<{ isCorrect?: boolean; firstWinner?: boolean } | null>(null);
+  const [answerResult, setAnswerResult] = useState<{ isCorrect?: boolean; pointsEarned?: number } | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(QUESTION_DURATION);
 
   const prevPhaseRef = useRef<string>("waiting");
@@ -141,12 +137,12 @@ export default function GamePage() {
     };
   }, [fetchGameState]);
 
-  // Phase & Question change handlers
+  // Phase & Question transition handling
   useEffect(() => {
     const currentQIdx = gameState.question_index;
     const currentPhase = gameState.phase;
 
-    // Reset local selection when entering new question
+    // Reset local selection when entering a new question
     if (currentPhase === "question" && (prevPhaseRef.current !== "question" || prevQuestionIdxRef.current !== currentQIdx)) {
       setSelectedAnswer(null);
       setIsSubmitting(false);
@@ -155,18 +151,18 @@ export default function GamePage() {
       sounds.playClick();
     }
 
-    // When phase becomes reveal, play sound
+    // When phase becomes reveal: play sound and wait 3.5s before next question
     if (currentPhase === "reveal" && prevPhaseRef.current !== "reveal") {
-      if (gameState.winner_of_question) {
+      if (answerResult?.isCorrect) {
         sounds.playCorrect();
       } else {
         sounds.playWrong();
       }
 
-      // Auto-advance to next question after 3.2 seconds
+      // Auto-advance to next question after 3.5 seconds of reveal
       const timeout = setTimeout(() => {
         advanceToNextQuestionAction(gameState.question_index);
-      }, 3200);
+      }, 3500);
 
       return () => clearTimeout(timeout);
     }
@@ -176,8 +172,8 @@ export default function GamePage() {
       sounds.playWinner();
       try {
         confetti({
-          particleCount: 120,
-          spread: 80,
+          particleCount: 140,
+          spread: 85,
           origin: { y: 0.6 },
         });
       } catch {
@@ -187,16 +183,15 @@ export default function GamePage() {
 
     prevPhaseRef.current = currentPhase;
     prevQuestionIdxRef.current = currentQIdx;
-  }, [gameState.phase, gameState.question_index, gameState.winner_of_question]);
+  }, [gameState.phase, gameState.question_index, answerResult]);
 
-  // Timer logic for question phase
+  // 15-Second Timer logic for question phase
   useEffect(() => {
     if (gameState.phase !== "question") {
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
       return;
     }
 
-    // Calculate time based on question_started_at if available
     const updateTimer = () => {
       if (gameState.question_started_at) {
         const started = new Date(gameState.question_started_at).getTime();
@@ -209,12 +204,12 @@ export default function GamePage() {
           sounds.playTick();
         }
 
+        // When 15 seconds run out, trigger reveal
         if (remaining === 0) {
           if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
           timeoutQuestionAction(gameState.question_index);
         }
       } else {
-        // Fallback decrement
         setTimeLeft((prev) => {
           if (prev <= 1) {
             timeoutQuestionAction(gameState.question_index);
@@ -242,12 +237,20 @@ export default function GamePage() {
     setIsSubmitting(true);
     sounds.playClick();
 
+    const currentRemainingSeconds = Math.max(1, timeLeft);
+
     try {
-      const res = await submitAnswerAction(playerId, playerName, gameState.question_index, optionKey);
+      const res = await submitAnswerAction(playerId, playerName, gameState.question_index, optionKey, currentRemainingSeconds);
       if (res.success) {
-        setAnswerResult({ isCorrect: res.isCorrect, firstWinner: res.firstWinner });
-        if (res.firstWinner) {
+        setAnswerResult({
+          isCorrect: res.isCorrect,
+          pointsEarned: res.pointsEarned,
+        });
+
+        if (res.isCorrect) {
           sounds.playCorrect();
+        } else {
+          sounds.playWrong();
         }
       }
     } catch (e) {
@@ -399,37 +402,39 @@ export default function GamePage() {
             <div className="flex items-center gap-1.5 font-bold font-mono">
               <Timer className={`w-3.5 h-3.5 ${isUrgent ? "text-rose-400 animate-bounce" : "text-cyan-400"}`} />
               <span className={isUrgent ? "text-rose-400 font-extrabold" : "text-slate-300"}>
-                {timeLeft}s
+                {timeLeft}s restantes
               </span>
             </div>
-            <span className="text-slate-500 text-[11px]">¡El más rápido gana!</span>
+            <span className="text-amber-400 font-semibold text-[11px] flex items-center gap-1">
+              <Zap className="w-3 h-3" /> ¡Acierta rápido = hasta +15 pts!
+            </span>
           </div>
         </div>
 
         {/* Reveal Overlay Banner */}
         {isReveal && (
           <div className="w-full my-2 animate-fade-in">
-            {gameState.winner_of_question ? (
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-600/20 via-teal-600/20 to-emerald-600/20 border-2 border-emerald-500 text-center shadow-xl shadow-emerald-500/20">
-                <div className="inline-flex items-center gap-2 text-emerald-400 font-extrabold text-sm uppercase tracking-wide">
-                  <Crown className="w-5 h-5 text-amber-400 fill-amber-400 animate-bounce" />
-                  ¡Punto para {gameState.winner_of_question}! ⚡
-                </div>
-                <p className="text-slate-300 text-xs mt-1">
-                  Fue el más rápido en acertar ({currentQuestion.answer}).
-                </p>
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-2 border-emerald-500 text-center shadow-xl shadow-emerald-500/20">
+              <div className="inline-flex items-center gap-2 text-emerald-400 font-extrabold text-sm uppercase tracking-wide">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                Respuesta Correcta: Opción {currentQuestion.answer}
               </div>
-            ) : (
-              <div className="p-4 rounded-2xl bg-rose-500/15 border-2 border-rose-500 text-center shadow-xl shadow-rose-500/20">
-                <div className="inline-flex items-center gap-2 text-rose-400 font-extrabold text-sm uppercase tracking-wide">
-                  <XCircle className="w-5 h-5" />
-                  ¡Tiempo Agotado!
-                </div>
-                <p className="text-slate-300 text-xs mt-1">
-                  Respuesta correcta: <strong className="text-emerald-400 font-bold font-mono">Opción {currentQuestion.answer}</strong>
+
+              {/* Personal round score feedback */}
+              {answerResult?.isCorrect ? (
+                <p className="text-emerald-300 font-bold text-xs mt-1.5 bg-emerald-500/10 py-1 px-3 rounded-full inline-block border border-emerald-500/30">
+                  🎉 ¡Sumaste +{answerResult.pointsEarned} puntos en esta ronda!
                 </p>
-              </div>
-            )}
+              ) : answerResult ? (
+                <p className="text-rose-300 text-xs mt-1.5">
+                  Marcaste opción incorrecta (+0 pts). ¡A por la siguiente!
+                </p>
+              ) : (
+                <p className="text-slate-400 text-xs mt-1.5">
+                  No enviaste respuesta a tiempo (+0 pts).
+                </p>
+              )}
+            </div>
           </div>
         )}
 
@@ -444,7 +449,7 @@ export default function GamePage() {
 
           {/* Explanation during reveal */}
           {isReveal && (
-            <div className="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+            <div className="mt-4 pt-3 border-t border-slate-800 text-xs text-slate-300 bg-slate-900/60 p-3 rounded-xl border border-slate-800 animate-fade-in">
               <strong className="text-cyan-400 block mb-1">💡 Explicación:</strong>
               {currentQuestion.explanation}
             </div>
@@ -507,12 +512,14 @@ export default function GamePage() {
           })}
         </div>
 
-        {/* Bottom feedback indicator */}
-        <div className="w-full text-center py-2 min-h-[28px] text-xs">
+        {/* Bottom feedback status */}
+        <div className="w-full text-center py-2 min-h-[32px] text-xs">
           {selectedAnswer && !isReveal && (
-            <div className="inline-flex items-center gap-2 text-cyan-300 bg-cyan-500/10 px-3 py-1.5 rounded-full border border-cyan-500/30 animate-pulse">
+            <div className="inline-flex items-center gap-2 text-cyan-300 bg-cyan-500/10 px-3.5 py-1.5 rounded-full border border-cyan-500/30 animate-pulse font-medium">
               <span className="w-2 h-2 rounded-full bg-cyan-400" />
-              <span>Respuesta enviada (Opción {selectedAnswer}). Esperando a los demás...</span>
+              <span>
+                Respuesta registrada (Opción {selectedAnswer}). Esperando a que termine el tiempo ({timeLeft}s)...
+              </span>
             </div>
           )}
         </div>
@@ -525,7 +532,6 @@ export default function GamePage() {
   // ==========================================
   if (gameState.phase === "finished") {
     const top3 = players.slice(0, 3);
-    const rest = players.slice(3);
 
     return (
       <main className="min-h-screen flex flex-col items-center justify-between p-4 sm:p-6 max-w-lg mx-auto">
@@ -537,7 +543,7 @@ export default function GamePage() {
           <h1 className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 bg-clip-text text-transparent">
             Podio de Ganadores
           </h1>
-          <p className="text-slate-400 text-xs mt-1">Los cerebros más veloces de la sala</p>
+          <p className="text-slate-400 text-xs mt-1">Puntaje total acumulado por velocidad y aciertos</p>
         </header>
 
         {/* Top 3 Podium Cards */}

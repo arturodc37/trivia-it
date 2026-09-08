@@ -339,7 +339,7 @@ export default function AdminPage() {
                 {gameState.winner_of_question && (
                   <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span>Ganador de esta pregunta: <strong>{gameState.winner_of_question}</strong> (+1 pt)</span>
+                    <span>Más rápido en responder: <strong>{gameState.winner_of_question}</strong></span>
                   </div>
                 )}
               </div>

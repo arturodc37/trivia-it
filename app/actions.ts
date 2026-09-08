@@ -2,7 +2,7 @@
 
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { QUESTIONS } from "@/data/questions";
-import { Option, GamePhase } from "@/lib/types";
+import { Option } from "@/lib/types";
 
 export async function joinGameAction(name: string, deviceId: string, avatarColor: string = "#38bdf8") {
   if (!isSupabaseConfigured) {
@@ -22,7 +22,6 @@ export async function joinGameAction(name: string, deviceId: string, avatarColor
     .single();
 
   if (existingPlayer) {
-    // Actualizar nombre y avatar si cambió
     await supabase
       .from("players")
       .update({ name: cleanName, avatar_color: avatarColor, last_seen: new Date().toISOString() })
@@ -56,10 +55,13 @@ export async function submitAnswerAction(
   playerId: string,
   playerName: string,
   questionIndex: number,
-  selected: Option
+  selected: Option,
+  remainingSeconds: number = 15
 ) {
   if (!isSupabaseConfigured) {
-    return { success: true, isDemo: true, isCorrect: true };
+    const isCorrect = QUESTIONS[questionIndex]?.answer === selected;
+    const points = isCorrect ? Math.max(1, Math.min(15, Math.round(remainingSeconds))) : 0;
+    return { success: true, isDemo: true, isCorrect, pointsEarned: points };
   }
 
   const question = QUESTIONS[questionIndex];
@@ -67,10 +69,24 @@ export async function submitAnswerAction(
     return { success: false, error: "Pregunta no encontrada" };
   }
 
-  const isCorrect = question.answer === selected;
+  // Comprobar si ya respondió para evitar duplicados
+  const { data: existingAnswer } = await supabase
+    .from("answers")
+    .select("id")
+    .eq("player_id", playerId)
+    .eq("question_index", questionIndex)
+    .single();
 
-  // Registrar respuesta en la tabla answers
-  const { error: answerError } = await supabase.from("answers").insert({
+  if (existingAnswer) {
+    return { success: false, alreadyAnswered: true };
+  }
+
+  const isCorrect = question.answer === selected;
+  // Puntos basados en el tiempo restante: Ej. 14s restantes = 14 puntos
+  const pointsEarned = isCorrect ? Math.max(1, Math.min(15, Math.round(remainingSeconds))) : 0;
+
+  // Registrar la respuesta del jugador
+  await supabase.from("answers").insert({
     player_id: playerId,
     player_name: playerName,
     question_index: questionIndex,
@@ -79,56 +95,64 @@ export async function submitAnswerAction(
     answered_at: new Date().toISOString(),
   });
 
-  // Si ya había respondido (error de constraint único), ignorar
-  if (answerError && answerError.code === "23505") {
-    return { success: false, alreadyAnswered: true };
-  }
-
-  // Si acertó, verificar si el juego sigue en fase 'question' para esta misma pregunta
-  if (isCorrect) {
-    const { data: currentGame } = await supabase
-      .from("game")
-      .select("phase, question_index, winner_of_question")
-      .eq("id", 1)
+  // Si acertó, sumar sus puntos calculados según la velocidad
+  if (isCorrect && pointsEarned > 0) {
+    const { data: player } = await supabase
+      .from("players")
+      .select("score")
+      .eq("id", playerId)
       .single();
 
-    if (
-      currentGame &&
-      currentGame.phase === "question" &&
-      currentGame.question_index === questionIndex &&
-      !currentGame.winner_of_question
-    ) {
-      // Este jugador fue el PRIMERO en acertar
-      // 1. Incrementar puntuación del jugador
-      const { data: player } = await supabase
-        .from("players")
-        .select("score")
-        .eq("id", playerId)
-        .single();
-
-      if (player) {
-        await supabase
-          .from("players")
-          .update({ score: (player.score || 0) + 1 })
-          .eq("id", playerId);
-      }
-
-      // 2. Marcar en game que hubo ganador y pasar a 'reveal'
+    if (player) {
       await supabase
-        .from("game")
-        .update({
-          phase: "reveal",
-          winner_of_question: playerName,
-          last_correct_answer: question.answer,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", 1);
-
-      return { success: true, isCorrect: true, firstWinner: true };
+        .from("players")
+        .update({ score: (player.score || 0) + pointsEarned })
+        .eq("id", playerId);
     }
   }
 
-  return { success: true, isCorrect: isCorrect, firstWinner: false };
+  return {
+    success: true,
+    isCorrect,
+    pointsEarned,
+  };
+}
+
+export async function timeoutQuestionAction(questionIndex: number) {
+  if (!isSupabaseConfigured) return { success: true };
+
+  const question = QUESTIONS[questionIndex];
+  const { data: game } = await supabase
+    .from("game")
+    .select("phase, question_index")
+    .eq("id", 1)
+    .single();
+
+  // Cambiar a fase 'reveal' cuando se termina el tiempo de 15s
+  if (game && game.phase === "question" && game.question_index === questionIndex) {
+    // Obtener estadísticas de quiénes acertaron
+    const { data: correctAnswers } = await supabase
+      .from("answers")
+      .select("player_name")
+      .eq("question_index", questionIndex)
+      .eq("is_correct", true)
+      .order("answered_at", { ascending: true })
+      .limit(1);
+
+    const fastestWinner = correctAnswers && correctAnswers.length > 0 ? correctAnswers[0].player_name : null;
+
+    await supabase
+      .from("game")
+      .update({
+        phase: "reveal",
+        winner_of_question: fastestWinner,
+        last_correct_answer: question ? question.answer : null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", 1);
+  }
+
+  return { success: true };
 }
 
 export async function advanceToNextQuestionAction(currentQuestionIndex: number) {
@@ -136,15 +160,17 @@ export async function advanceToNextQuestionAction(currentQuestionIndex: number) 
 
   const { data: game } = await supabase
     .from("game")
-    .select("total_questions, question_index")
+    .select("total_questions, question_index, phase")
     .eq("id", 1)
     .single();
 
-  const total = game?.total_questions || 20;
+  if (!game) return { success: false };
+
+  const total = game.total_questions || 20;
   const nextIdx = currentQuestionIndex + 1;
 
   if (nextIdx >= total || nextIdx >= QUESTIONS.length) {
-    // Fin del juego
+    // Fin del juego -> Podio
     await supabase
       .from("game")
       .update({
@@ -154,7 +180,7 @@ export async function advanceToNextQuestionAction(currentQuestionIndex: number) 
       })
       .eq("id", 1);
   } else {
-    // Siguiente pregunta
+    // Siguiente pregunta con 15 segundos completos
     await supabase
       .from("game")
       .update({
@@ -171,44 +197,18 @@ export async function advanceToNextQuestionAction(currentQuestionIndex: number) 
   return { success: true };
 }
 
-export async function timeoutQuestionAction(questionIndex: number) {
-  if (!isSupabaseConfigured) return { success: true };
-
-  const question = QUESTIONS[questionIndex];
-  const { data: game } = await supabase
-    .from("game")
-    .select("phase, question_index")
-    .eq("id", 1)
-    .single();
-
-  // Solo cambiar si aún sigue en fase question para esa pregunta
-  if (game && game.phase === "question" && game.question_index === questionIndex) {
-    await supabase
-      .from("game")
-      .update({
-        phase: "reveal",
-        winner_of_question: null,
-        last_correct_answer: question ? question.answer : null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", 1);
-  }
-
-  return { success: true };
-}
-
 export async function startGameAction(totalQuestions: number = 20) {
   if (!isSupabaseConfigured) return { success: true };
 
-  // Reiniciar puntajes de jugadores
+  // Reiniciar puntajes de todos los jugadores a 0
   await supabase.from("players").update({ score: 0 }).neq("id", "00000000-0000-0000-0000-000000000000");
 
-  // Limpiar respuestas previas
+  // Limpiar historial de respuestas
   await supabase.from("answers").delete().neq("id", -1);
 
-  // Iniciar juego en la pregunta 0
   const count = Math.min(Math.max(5, totalQuestions), QUESTIONS.length);
 
+  // Iniciar juego en la pregunta 0 con timer
   await supabase
     .from("game")
     .update({

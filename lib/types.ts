@@ -32,8 +32,10 @@ export interface GameState {
 
 export interface AnswerRecord {
   player_id: string;
+  player_name: string;
   question_index: number;
   selected: Option;
   is_correct: boolean;
+  points_earned: number;
   answered_at: string;
 }
